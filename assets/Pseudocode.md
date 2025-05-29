@@ -12,6 +12,7 @@ hier muss jede Logic rein:
     1. name
     2. score
         * create Player
+        * winRound
 
 3. Game-Factory:
     1. game-counter
@@ -22,5 +23,7 @@ hier muss jede Logic rein:
         * checkValidMove
         * checkGameEnd
         * switchPlayer
-        * 
+
+Reihenfolge: 
+1. 
 

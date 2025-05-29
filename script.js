@@ -1,35 +1,60 @@
-function gameboard() {
-  let gameboard = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// ___GAMEBOARD (IIFE-MODULE)___
 
-  const placeX = (field) => {
-    gameboard.splice(field - 1, 1, "X");
-  };
+const gameboard = (function () {
+  let board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const placeX = (field) => board.splice(field - 1, 1, "X");
+  const placeO = (field) => board.splice(field - 1, 1, "O");
+  const clearGame = () => board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const logGameboard = () => renderConsole(board);
+  return { board, placeX, placeO, logGameboard, clearGame };
+})();
 
-  const placeO = (field) => {
-    gameboard.splice(field - 1, 1, "O");
-  };
+// ___PLAYER___
 
-  const clearGame = () => {
-    gameboard = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  };
+function createPlayer(name) {
+  const playerName = name;
+  let score = 0;
 
-  return { gameboard, placeX, placeO, clearGame };
+  const checkScore = () => score;
+  const winRound = () => score++;
+
+  return { playerName, checkScore, winRound };
 }
 
-function renderConsole (gameboard) {
- console.log(
-    " " + gameboard[0], gameboard[1], gameboard[2], "\n",
-    gameboard[3], gameboard[4], gameboard[5], "\n",
-    gameboard[6], gameboard[7], gameboard[8], "\n",
- )
+// ___GAME-LOGIC____
+
+function game () {
+    let gameCounter = 0;
+    let roundCounter = 0;
+
+    const newGame = () => {
+        //
+    }
+
+    const playRound = () => {
+        //
+    }
+
+    return { gameCounter , roundCounter}
 }
 
+function renderConsole(board) {
+  console.log(
+    " " + board[0],
+    board[1],
+    board[2],
+    "\n",
+    board[3],
+    board[4],
+    board[5],
+    "\n",
+    board[6],
+    board[7],
+    board[8],
+    "\n"
+  );
+}
 
-
-const newGame = gameboard();
-
-newGame.placeX(5);
-newGame.placeO(4);
-newGame.placeX(3);
-renderConsole(newGame.gameboard);
-newGame.clearGame();
+gameboard.placeX(5);
+gameboard.logGameboard();
+gameboard.clearGame();
