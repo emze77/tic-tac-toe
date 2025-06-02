@@ -4,9 +4,9 @@ const gameboard = (function () {
   let board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const placeX = (field) => board.splice(field - 1, 1, "X");
   const placeO = (field) => board.splice(field - 1, 1, "O");
-  const clearGame = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const clearBoard = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const logGameboard = () => renderConsole(board);
-  return { board, placeX, placeO, logGameboard, clearGame };
+  return { board, placeX, placeO, logGameboard, clearBoard };
 })();
 
 // ___PLAYER___
@@ -32,16 +32,29 @@ const game = (function () {
   let turnPlayerOne = true;
 
   const newGame = () => {
-    //
+    resetGame();
+    randomStartPlayer();
+    playRound();
   };
 
   const resetGame = () => {
-    gameboard.clearGame();
-    game.playerOne.score = 0;
-    game.playerTwo.score = 0;
+    gameboard.clearBoard();
+    playerOne.score = 0;
+    playerTwo.score = 0;
   };
 
+  const randomStartPlayer =  () => {
+    if (Math.random() < 0.5) {
+      turnPlayerOne = true;
+      console.log("Player One Begins!")
+    } else {
+      turnPlayerOne = false;
+      console.log("Player Two Begins!")
+    }
+  }
+
   const playRound = () => {
+    if 
     // //
   };
 
@@ -53,12 +66,14 @@ const game = (function () {
     turnPlayerOne,
     newGame,
     resetGame,
+    randomStartPlayer,
     playRound,
   };
 })();
 
 function renderConsole(board) {
   console.log(
+    "\n" + 
     " " + board[0],
     board[1],
     board[2],
@@ -74,14 +89,9 @@ function renderConsole(board) {
   );
   console.log(
     `Score Player One: ${game.playerOne.checkScore()}\n` + 
-    `Score Player Two: ${game.playerTwo.checkScore()}`
+    `Score Player Two: ${game.playerTwo.checkScore()}\n`
   );
 }
 
-gameboard.placeX(5);
-gameboard.logGameboard();
-
-game.resetGame();
-game.playerOne.winRound();
-game.playerOne.winRound();
+game.newGame();
 gameboard.logGameboard();

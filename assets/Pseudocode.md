@@ -29,7 +29,9 @@ Reihenfolge:
 NEWGAME
 1. Reinigen von Spielfeld & Spielständen
 5. Zufällige Auswahl, wer beginnt.
-6. Zug erster Spieler
+
+PLAYROUND:
+* Zug erster Spieler
     * Überprüfung ob valide
     * Überprüfung ob Spielende
 
