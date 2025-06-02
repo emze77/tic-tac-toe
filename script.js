@@ -5,7 +5,7 @@ const gameboard = (function () {
   const placePlayerOne = (field) => board.splice(field - 1, 1, game.playerOne.checkSymbol());
   const placePlayerTwo = (field) => board.splice(field - 1, 1, game.playerTwo.checkSymbol());
   const clearBoard = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  const logGameboard = () => renderConsole(board);
+  const logGameboard = () => renderConsole.board(board);
   return { board, placePlayerOne, placePlayerTwo, logGameboard, clearBoard };
 })();
 
@@ -78,27 +78,57 @@ const game = (function () {
 })();
 
 
-function renderConsole(board) {
-  console.log(
-    "\n" + 
-    " " + board[0],
-    board[1],
-    board[2],
-    "\n",
-    board[3],
-    board[4],
-    board[5],
-    "\n",
-    board[6],
-    board[7],
-    board[8],
-    "\n"
-  );
-  console.log(
-    `Score Player One: ${game.playerOne.checkScore()}\n` + 
-    `Score Player Two: ${game.playerTwo.checkScore()}\n`
-  );
-}
+const renderConsole = (function() {
+
+  const board = (board) => {
+    console.log(
+      "\n" + 
+      " " + board[0],
+      board[1],
+      board[2],
+      "\n",
+      board[3],
+      board[4],
+      board[5],
+      "\n",
+      board[6],
+      board[7],
+      board[8],
+      "\n"
+    );
+  }
+
+  const score = () => {
+    console.log(
+      `Score Player One: ${game.playerOne.checkScore()}\n` + 
+      `Score Player Two: ${game.playerTwo.checkScore()}\n`
+    );
+  }
+
+  return { board , score }
+})();
+
+// function renderConsole(board) {
+//   console.log(
+//     "\n" + 
+//     " " + board[0],
+//     board[1],
+//     board[2],
+//     "\n",
+//     board[3],
+//     board[4],
+//     board[5],
+//     "\n",
+//     board[6],
+//     board[7],
+//     board[8],
+//     "\n"
+//   );
+//   console.log(
+//     `Score Player One: ${game.playerOne.checkScore()}\n` + 
+//     `Score Player Two: ${game.playerTwo.checkScore()}\n`
+//   );
+// }
 
 game.newGame();
 gameboard.placePlayerOne(4);
