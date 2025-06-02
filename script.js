@@ -37,6 +37,14 @@ const game = (function () {
     playRound();
   };
 
+  const playRound = () => {
+    playTurn();
+  };
+
+  const playTurn = () => {
+
+  }
+
   const resetGame = () => {
     gameboard.clearBoard();
     playerOne.score = 0;
@@ -53,9 +61,7 @@ const game = (function () {
     }
   }
 
-  const playRound = () => {
-    // //
-  };
+
 
   return {
     gameCounter,
@@ -67,8 +73,10 @@ const game = (function () {
     resetGame,
     randomStartPlayer,
     playRound,
+    playTurn,
   };
 })();
+
 
 function renderConsole(board) {
   console.log(
