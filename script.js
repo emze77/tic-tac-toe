@@ -2,20 +2,20 @@
 
 const gameboard = (function () {
   let board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const placeX = (field) => board.splice(field - 1, 1, "X");
-  const placeO = (field) => board.splice(field - 1, 1, "O");
+  const placePlayerOne = (field) => board.splice(field - 1, 1, game.playerOne.checkSymbol());
+  const placePlayerTwo = (field) => board.splice(field - 1, 1, game.playerTwo.checkSymbol());
   const clearBoard = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const logGameboard = () => renderConsole(board);
-  return { board, placeX, placeO, logGameboard, clearBoard };
+  return { board, placePlayerOne, placePlayerTwo, logGameboard, clearBoard };
 })();
 
 // ___PLAYER___
 
 function createPlayer(symbol) {
   let score = 0;
-  let playerSymbol = "";
+  let playerSymbol = symbol;
 
-  const checkSymbol = () => playerSymbol;
+  const checkSymbol = () => playerSymbol; // notwendig? geht auch mit game.playerOne.playerSymbol
   const checkScore = () => score;
   const winRound = () => score++;
 
@@ -54,7 +54,6 @@ const game = (function () {
   }
 
   const playRound = () => {
-    if 
     // //
   };
 
@@ -94,4 +93,6 @@ function renderConsole(board) {
 }
 
 game.newGame();
+gameboard.placePlayerOne(4);
+gameboard.placePlayerTwo(6);
 gameboard.logGameboard();
