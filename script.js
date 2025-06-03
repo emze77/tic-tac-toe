@@ -2,14 +2,16 @@
 
 const gameboard = (function () {
   let board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
   const placePlayerOne = (field) =>
-    board.splice(field - 1, 1, game.playerOne.checkSymbol());
+    board.splice(field - 1, 1, game.checkPlayerOne().checkSymbol());
   const placePlayerTwo = (field) =>
-    board.splice(field - 1, 1, game.playerTwo.checkSymbol());
+    board.splice(field - 1, 1, game.checkPlayerTwo().checkSymbol());
   const clearBoard = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const logGameboard = () => renderConsole.board(board);
+  const checkField = (field) => board[field];
   return {
-    board,
+    checkField,
     placePlayerOne,
     placePlayerTwo,
     logGameboard,
@@ -19,62 +21,77 @@ const gameboard = (function () {
 
 // ___PLAYER___
 
-function createPlayer(symbol) {
-  let score = 0;
+function createPlayer(name, symbol) {
+  const playerName = name;
   let playerSymbol = symbol;
+  let score = 0;
 
-  const checkSymbol = () => playerSymbol; // notwendig? geht auch mit game.playerOne.playerSymbol
+  const checkName = () => playerName;
+  const checkSymbol = () => playerSymbol;
   const checkScore = () => score;
   const winRound = () => score++;
 
-  return { score, playerSymbol, checkSymbol, checkScore, winRound };
+  return { checkName, checkSymbol, checkScore, winRound };
 }
+
 
 // ___GAME-LOGIC (IIFE-Module)____
 
 const game = (function () {
-  let gameCounter = 0;
+  let roundsTotal = 3;
   let roundCounter = 0;
-  let playerOne = createPlayer("X");
-  let playerTwo = createPlayer("O");
+  let roundEnd = false;
+
+  let playerOne = createPlayer("Jens", "X");
+  let playerTwo = createPlayer("Jenny", "O");
   let turnPlayerOne = true;
 
   const newGame = () => {
     resetGame();
     randomStartPlayer();
-    playRound();
+
+    do {
+      playRound();
+    } while (roundsTotal > roundCounter);
+
+    handleGameEnd();
   };
 
   const playRound = () => {
-    playTurn();
+    do {
+      playTurn();
+      gameboard.logGameboard();
+      verifyRoundEnd();
+      turnPlayerOne = !turnPlayerOne;
+    } while (!roundEnd);
+
+    handleRoundEnd();
   };
 
   const playTurn = () => {
-    renderConsole.nextTurn();
+    let nextPlayer = game.turnPlayerOne ? "Player One" : "Player Two";
+    renderConsole.callout(`Next turn: ${nextPlayer}!`);
     let nextTurn = prompt("What`s your turn? (1 - 9)");
     verifyTurn(nextTurn);
-  };
-
-  const resetGame = () => {
-    gameboard.clearBoard();
-    playerOne.score = 0;
-    playerTwo.score = 0;
+    turnPlayerOne
+      ? gameboard.placePlayerOne(nextTurn)
+      : gameboard.placePlayerTwo(nextTurn);
   };
 
   const randomStartPlayer = () => {
     if (Math.random() < 0.5) {
       turnPlayerOne = true;
-      console.log("Player One Begins!");
+      renderConsole.callout("Player One Begins!");
     } else {
       turnPlayerOne = false;
-      console.log("Player Two Begins!");
+      renderConsole.callout("Player Two Begins!");
     }
   };
 
   const verifyTurn = (field) => {
     if (
-      gameboard.board[field - 1] === game.playerOne.checkSymbol() ||
-      gameboard.board[field - 1] === game.playerTwo.checkSymbol()
+      gameboard.checkField(field - 1) === playerOne.checkSymbol() ||
+      gameboard.checkField(field - 1) === playerTwo.checkSymbol()
     ) {
       renderConsole.invalidTurn("Field is already occupied!");
     } else if (field < 1 || field > 9 || field % 1 !== 0) {
@@ -86,14 +103,61 @@ const game = (function () {
     }
   };
 
+  const verifyRoundEnd = () => {
+    let gc = gameboard.checkField;
+    let csym = turnPlayerOne
+      ? playerOne.checkSymbol()
+      : playerTwo.checkSymbol();
+
+    if (
+      // horicontal winning oppertunities
+      (csym === gc(0) && csym === gc(1) && csym === gc(2)) ||
+      (csym === gc(3) && csym === gc(4) && csym === gc(5)) ||
+      (csym === gc(6) && csym === gc(7) && csym === gc(8)) ||
+      // vertical winning oppertunities
+      (csym === gc(0) && csym === gc(3) && csym === gc(6)) ||
+      (csym === gc(1) && csym === gc(4) && csym === gc(7)) ||
+      (csym === gc(2) && csym === gc(5) && csym === gc(8)) ||
+      // diagonal winning oppertunities
+      (csym === gc(0) && csym === gc(4) && csym === gc(8)) ||
+      (csym === gc(6) && csym === gc(4) && csym === gc(2))
+    ) {
+      renderConsole.callout("game ends!");
+      roundEnd = true;
+    }
+  };
+
+  const handleRoundEnd = () => {
+    let winner = turnPlayerOne ? playerTwo : playerOne; // turn changes after verifyRoundEnd
+    playerOne.winRound();
+    roundEnd = false;
+    addRound();
+
+    renderConsole.callout(
+      `${winner.checkName()} has won the round!\n
+      New Score: ${playerOne.checkName()}: ${playerOne.checkScore()}, ${playerTwo.checkName()}: ${playerTwo.checkScore()}\n
+      ${roundCounter} rounds are played, ${
+        roundsTotal - roundCounter
+      } are left!`
+    );
+
+    gameboard.clearBoard();
+  };
+
+  const addRound = () => roundCounter++;
+  const checkPlayerOne = () => playerOne;
+  const checkPlayerTwo = () => playerTwo;
+
+  const resetGame = () => {
+    gameboard.clearBoard();
+    playerOne.score = 0;
+    playerTwo.score = 0;
+  };
+
   return {
-    gameCounter,
-    roundCounter,
-    playerOne,
-    playerTwo,
-    turnPlayerOne,
+    checkPlayerOne,
+    checkPlayerTwo,
     newGame,
-    resetGame,
   };
 })();
 
@@ -117,26 +181,22 @@ const renderConsole = (function () {
 
   const score = () => {
     console.log(
-      `Score Player One: ${game.playerOne.checkScore()}\n` +
-        `Score Player Two: ${game.playerTwo.checkScore()}\n`
+      `Score Player One: ${game.checkPlayerOne().checkScore()}\n` +
+        `Score Player Two: ${game.checkPlayerTwo().checkScore()}\n`
     );
   };
 
-  const nextTurn = () => {
-    let nextPlayer = "";
-    if (game.turnPlayerOne) {
-      nextPlayer = "Player One";
-    } else {
-      nextPlayer = "Player Two";
-    }
-    console.log(`Next turn: ${nextPlayer}!`);
+  const callout = (call) => {
+    console.log(call);
   };
 
   const invalidTurn = (message) => {
     console.log(message);
   };
 
-  return { board, score, nextTurn, invalidTurn };
+
+
+  return { board, score, callout, invalidTurn };
 })();
 
 gameboard.placePlayerOne(4);
