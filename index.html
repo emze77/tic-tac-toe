@@ -1,15 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css"> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
     <title>Tic Tac Toe</title>
-</head>
-<body>
+  </head>
+  <body>
+    <h1>Tic Tac Toe</h1>
 
+    <main>
+      <section id="section1">
+        <div id="nextTurnContainer">
+          <p id="nextTurnText">Next Turn: Player One</p>
+        </div>
 
+        <div id="containerPlayer1">
+          <h2 id="namePlayer1">Player One</h2>
+          <p class="playerScore" id="scorePlayer1">Score: 0</p>
+        </div>
+      </section>
 
-<script src="script.js"></script>
-</body>
+      <section id="section2">
+        <div id="gameboard">
+          <button class="field" value="1"  id="btn1"></button>
+          <button class="field" value="2" id="btn2"></button>
+          <button class="field" value="3" id="btn3"></button>
+          <button class="field" value="4" id="btn4"></button>
+          <button class="field" value="5" id="btn5"></button>
+          <button class="field" value="6" id="btn6"></button>
+          <button class="field" value="7" id="btn7"></button>
+          <button class="field" value="8" id="btn8"></button>
+          <button class="field" value="9" id="btn9"></button>
+        </div>
+      </section>
+
+      <section id="section3">
+        <div id="roundsContainer">
+          <p id="currentRound">Round: 1 / 5</p>
+        </div>
+
+        <div id="containerPlayer1">
+          <h2 id="namePlayer1">Player Two</h2>
+          <p class="playerScore" id="scorePlayer1">Score: 0</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
 </html>
