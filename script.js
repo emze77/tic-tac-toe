@@ -174,8 +174,6 @@ const game = (function () {
   const checkRoundCounter = () => roundCounter;
   const checkRoundsTotal = () => roundsTotal;
 
-
-
   return {
     checkPlayerOne,
     checkPlayerTwo,
@@ -189,7 +187,7 @@ const renderConsole = (function () {
   const board = () => {
     const gcf = gameboard.checkField;
     console.log(
-      "\n" + " " + gameboard.checkField(0),
+      "\n" + " " + gcf(0),
       gcf(1),
       gcf(2),
       "\n",
