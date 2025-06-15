@@ -1,3 +1,15 @@
+// ___QUERY SELECTORS___
+
+const qs = {
+  player1: document.querySelector("#namePlayer1"),
+  scorePlayer1: document.querySelector("#scorePlayer1"),
+  player2: document.querySelector("#namePlayer2"),
+  scorePlayer2: document.querySelector("#scorePlayer2"),
+  nextTurntext: document.querySelector("#nextTurntext"),
+  currentRound: document.querySelector("#currentRound"),
+  fields: document.querySelectorAll(".field"),
+};
+
 // ___GAMEBOARD (IIFE-MODULE)___
 
 const gameboard = (function () {
@@ -183,6 +195,14 @@ const game = (function () {
   };
 })();
 
+game.newGame(); // START GAME
+
+// ___RENDER IN WINDOW___
+
+const renderWindow = (function () {})();
+
+// ___RENDER IN CONSOLE___
+
 const renderConsole = (function () {
   const board = () => {
     const gcf = gameboard.checkField;
@@ -227,5 +247,3 @@ const renderConsole = (function () {
 
   return { board, score, roundsLeft, callout };
 })();
-
-game.newGame();
