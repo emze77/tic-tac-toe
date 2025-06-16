@@ -1,0 +1,39 @@
+
+html {
+    background-color: #525559;
+    color: #F2F2F2;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 240px;
+    justify-items: center;
+    align-items: center;
+}
+
+
+#gameboard {
+    justify-self: center;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 80px 80px 80px;
+    grid-template-rows: 80px 80px 80px;
+
+    background-color: #F2F2F2;
+    padding: -50px;
+}
+
+button {
+    all: unset;
+    background-color: #525559;
+
+    &:hover {
+        background-color:#BABDBF;
+    }
+}

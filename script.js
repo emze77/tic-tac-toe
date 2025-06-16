@@ -108,7 +108,9 @@ const game = (function () {
         nextTurn = prompt("What`s your turn? (1 - 9)");
       } while (!verifyTurn(nextTurn));
     } else {
-      //
+      do {
+        nextTurn = screenController.clickHandlerBoard();
+      } while (!verifyTurn(nextTurn));
     }
 
     turnPlayerOne
@@ -192,6 +194,10 @@ const game = (function () {
     turnCounter = 0;
   };
 
+  const handleGameEnd = () => {
+    console.log("Game is over");
+  };
+
   const addRound = () => roundCounter++;
   const checkPlayerOne = () => playerOne;
   const checkPlayerTwo = () => playerTwo;
@@ -207,7 +213,6 @@ const game = (function () {
   };
 })();
 
-
 // ___RENDER IN WINDOW___
 
 const screenController = (function () {
@@ -216,21 +221,26 @@ const screenController = (function () {
   };
 
   const clickHandlerBoard = () => {
-    // return qs.fields.forEach(item => {
-    //   item.addEventListener('click', () => {
-    //     return item["data-num"] // geht fix nicht.
-    //   } )
-    // })
-    // //
+    qs.fields.forEach((item) => {
+      item.addEventListener("click", () => {
+        console.log("clicked: " + item.value);
+        return item.value;
+      });
+    });
   };
 
   return {
-    updateScreen ,
+    updateScreen,
     clickHandlerBoard,
-  }
+  };
 })();
 
-
+// qs.fields.forEach((item) => {
+//   item.addEventListener("click", () => {
+//     console.log("clicked: " + item.value);
+//     return item.value;
+//   });
+// });
 
 // ___RENDER IN CONSOLE___
 
@@ -278,7 +288,5 @@ const renderConsole = (function () {
 
   return { board, score, roundsLeft, callout };
 })();
-
-
 
 game.newGame(); // START GAME
