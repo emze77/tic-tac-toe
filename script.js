@@ -50,6 +50,8 @@ function createPlayer(name, symbol) {
 // ___GAME-LOGIC (IIFE-Module)____
 
 const game = (function () {
+  const consoleMode = false;
+
   let roundsTotal = 3;
   let roundCounter = 0;
   let turnCounter = 0;
@@ -63,7 +65,7 @@ const game = (function () {
   const newGame = () => {
     resetGame();
     randomStartPlayer();
-    renderConsole.board();
+    consoleMode ? renderConsole.board() : screenController.updateScreen();
 
     do {
       playRound();
@@ -90,14 +92,24 @@ const game = (function () {
 
   const playTurn = () => {
     let nextPlayer = turnPlayerOne ? playerOne : playerTwo;
-    renderConsole.callout(
-      `Next turn: ${nextPlayer.checkName()} (${nextPlayer.checkSymbol()})!`
-    );
+
+    if (consoleMode) {
+      renderConsole.callout(
+        `Next turn: ${nextPlayer.checkName()} (${nextPlayer.checkSymbol()})!`
+      );
+    } else {
+      screenController.updateScreen();
+    }
 
     let nextTurn;
-    do {
-      nextTurn = prompt("What`s your turn? (1 - 9)");
-    } while (!verifyTurn(nextTurn));
+
+    if (consoleMode) {
+      do {
+        nextTurn = prompt("What`s your turn? (1 - 9)");
+      } while (!verifyTurn(nextTurn));
+    } else {
+      //
+    }
 
     turnPlayerOne
       ? gameboard.placePlayerOne(nextTurn)
@@ -195,11 +207,30 @@ const game = (function () {
   };
 })();
 
-game.newGame(); // START GAME
 
 // ___RENDER IN WINDOW___
 
-const renderWindow = (function () {})();
+const screenController = (function () {
+  const updateScreen = () => {
+    //
+  };
+
+  const clickHandlerBoard = () => {
+    // return qs.fields.forEach(item => {
+    //   item.addEventListener('click', () => {
+    //     return item["data-num"] // geht fix nicht.
+    //   } )
+    // })
+    // //
+  };
+
+  return {
+    updateScreen ,
+    clickHandlerBoard,
+  }
+})();
+
+
 
 // ___RENDER IN CONSOLE___
 
@@ -247,3 +278,7 @@ const renderConsole = (function () {
 
   return { board, score, roundsLeft, callout };
 })();
+
+
+
+game.newGame(); // START GAME
