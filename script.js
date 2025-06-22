@@ -10,6 +10,15 @@ const qs = {
   fields: document.querySelectorAll(".field"),
 };
 
+
+qs.fields.forEach((item) => {
+    item.addEventListener("click", () => {
+      console.log("clicked: " + item.value);
+      return item.value;
+    });
+  });
+
+
 // ___GAMEBOARD (IIFE-MODULE)___
 
 const gameboard = (function () {
@@ -65,13 +74,13 @@ const game = (function () {
   const newGame = () => {
     resetGame();
     randomStartPlayer();
-    consoleMode ? renderConsole.board() : screenController.updateScreen();
+    // screenController.updateScreen();
 
-    do {
-      playRound();
-    } while (roundsTotal > roundCounter);
+    // do {
+    //   playRound();
+    // } while (roundsTotal > roundCounter);
 
-    handleGameEnd();
+    // handleGameEnd();
   };
 
   const playRound = () => {
@@ -92,26 +101,18 @@ const game = (function () {
 
   const playTurn = () => {
     let nextPlayer = turnPlayerOne ? playerOne : playerTwo;
-
-    if (consoleMode) {
-      renderConsole.callout(
-        `Next turn: ${nextPlayer.checkName()} (${nextPlayer.checkSymbol()})!`
-      );
-    } else {
-      screenController.updateScreen();
-    }
-
+    screenController.updateScreen();
     let nextTurn;
 
-    if (consoleMode) {
-      do {
-        nextTurn = prompt("What`s your turn? (1 - 9)");
-      } while (!verifyTurn(nextTurn));
-    } else {
-      do {
-        nextTurn = screenController.clickHandlerBoard();
-      } while (!verifyTurn(nextTurn));
-    }
+    // if (consoleMode) {
+    //   do {
+    //     nextTurn = prompt("What`s your turn? (1 - 9)");
+    //   } while (!verifyTurn(nextTurn));
+    // } else {
+    //   do {
+    //     nextTurn = screenController.clickHandlerBoard();
+    //   } while (!verifyTurn(nextTurn));
+    // }
 
     turnPlayerOne
       ? gameboard.placePlayerOne(nextTurn)
@@ -213,7 +214,7 @@ const game = (function () {
   };
 })();
 
-// ___RENDER IN WINDOW___
+// ___SCREEN CONTROLLER___
 
 const screenController = (function () {
   const updateScreen = () => {
@@ -234,6 +235,15 @@ const screenController = (function () {
     clickHandlerBoard,
   };
 })();
+
+// const clickHandlerBoard = () => {
+//   qs.fields.forEach((item) => {
+//     item.addEventListener("click", () => {
+//       console.log("clicked: " + item.value);
+//       return item.value;
+//     });
+//   });
+// };
 
 // qs.fields.forEach((item) => {
 //   item.addEventListener("click", () => {
