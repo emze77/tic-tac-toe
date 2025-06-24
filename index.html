@@ -12,12 +12,12 @@
     <main>
       <section id="section1">
         <div id="nextTurnContainer">
-          <p id="nextTurnText">Next Turn: Player One</p>
+          <p>Next Turn: <span id="nextTurnText"></span></p>
         </div>
 
         <div id="containerPlayer1">
           <h2 id="namePlayer1">Player One</h2>
-          <p class="playerScore" id="scorePlayer1">Score: 0</p>
+          <p>Score: <span class="playerScore" id="scorePlayer1">0</span></p>
         </div>
       </section>
 
@@ -33,16 +33,22 @@
           <button class="field" value="8" id="btn8"></button>
           <button class="field" value="9" id="btn9"></button>
         </div>
+        <div class="messageToPlayerContainer">
+          <p class="messageToPlayer" id="messageToPlayer">Messages appear here!</p>
+        </div>
+        <div class="newGameButtonContainer">
+          <button id="btnNewGame" class="btnNewGame">New Game</button>
+        </div>
       </section>
 
       <section id="section3">
         <div id="roundsContainer">
-          <p id="currentRound">Round: 1 / 5</p>
+          <p>Round: <span id="currentRound"></span> / <span id="totalRounds"></span></p>
         </div>
 
-        <div id="containerPlayer1">
-          <h2 id="namePlayer1">Player Two</h2>
-          <p class="playerScore" id="scorePlayer1">Score: 0</p>
+        <div id="containerPlayer2">
+          <h2 id="namePlayer2">Player Two</h2>
+          <p class="playerScore" id="scorePlayer2">Score: 0</p>
         </div>
       </section>
     </main>
