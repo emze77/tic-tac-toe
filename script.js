@@ -1,37 +1,22 @@
-// ___QUERY SELECTORS___
-
-const qs = {
-  player1: document.querySelector("#namePlayer1"),
-  scorePlayer1: document.querySelector("#scorePlayer1"),
-  player2: document.querySelector("#namePlayer2"),
-  scorePlayer2: document.querySelector("#scorePlayer2"),
-  nextTurntext: document.querySelector("#nextTurntext"),
-  currentRound: document.querySelector("#currentRound"),
-  fields: document.querySelectorAll(".field"),
-};
-
-
-qs.fields.forEach((item) => {
-    item.addEventListener("click", () => {
-      console.log("clicked: " + item.value);
-      return item.value;
-    });
-  });
-
-
 // ___GAMEBOARD (IIFE-MODULE)___
 
 const gameboard = (function () {
+  // first row = 1 2 3, second row = 4 5 6, third row = 7 8 9
   let board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   const placePlayerOne = (field) =>
     board.splice(field - 1, 1, game.checkPlayerOne().checkSymbol());
+
   const placePlayerTwo = (field) =>
     board.splice(field - 1, 1, game.checkPlayerTwo().checkSymbol());
+
+  // clearing Board = rewrite fields with numbers
   const clearBoard = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
   const checkBoard = () => board;
-  // const logGameboard = () => renderConsole.board(board);
+
   const checkField = (field) => board[field];
+
   return {
     checkField,
     checkBoard,
@@ -59,75 +44,68 @@ function createPlayer(name, symbol) {
 // ___GAME-LOGIC (IIFE-Module)____
 
 const game = (function () {
-  const consoleMode = false;
-
   let roundsTotal = 3;
   let roundCounter = 0;
   let turnCounter = 0;
-  let roundEnd = false;
   let draw = false;
+  let gameProcess = false;
 
   let playerOne = createPlayer("Alice", "X");
   let playerTwo = createPlayer("Bob", "O");
   let turnPlayerOne = true;
 
   const newGame = () => {
+    console.log("New Game started");
     resetGame();
     randomStartPlayer();
-    // screenController.updateScreen();
-
-    // do {
-    //   playRound();
-    // } while (roundsTotal > roundCounter);
-
-    // handleGameEnd();
+    gameProcess = true;
   };
 
-  const playRound = () => {
-    do {
-      playTurn();
-      renderConsole.board();
-      verifyRoundEnd();
+  // reacts to click on the board while gameProcess = true
+  const handlePlayerMove = (field) => {
+    let currentPlayer = turnPlayerOne ? playerOne : playerTwo;
+
+    if (verifyTurn(field)) {
+      turnPlayerOne
+        ? gameboard.placePlayerOne(field)
+        : gameboard.placePlayerTwo(field);
+
+      turnCounter++;
+      screenController.messageToPlayer(`Turn: ${turnCounter}`)
       turnPlayerOne = !turnPlayerOne;
-    } while (!roundEnd);
-
-    promotingWinner();
-    resetRound();
-
-    addRound();
-    renderConsole.score();
-    renderConsole.roundsLeft();
-  };
-
-  const playTurn = () => {
-    let nextPlayer = turnPlayerOne ? playerOne : playerTwo;
-    screenController.updateScreen();
-    let nextTurn;
-
-    // if (consoleMode) {
-    //   do {
-    //     nextTurn = prompt("What`s your turn? (1 - 9)");
-    //   } while (!verifyTurn(nextTurn));
-    // } else {
-    //   do {
-    //     nextTurn = screenController.clickHandlerBoard();
-    //   } while (!verifyTurn(nextTurn));
-    // }
-
-    turnPlayerOne
-      ? gameboard.placePlayerOne(nextTurn)
-      : gameboard.placePlayerTwo(nextTurn);
-    turnCounter++;
-  };
-
-  const randomStartPlayer = () => {
-    if (Math.random() < 0.5) {
-      turnPlayerOne = true;
-      renderConsole.callout(`${playerOne.checkName()} begins!`);
     } else {
-      turnPlayerOne = false;
-      renderConsole.callout(`${playerTwo.checkName()} begins!`);
+      screenController.messageToPlayer("Field is already occupied!");
     }
+
+    if (verifyRoundEnd()) {
+      if (draw) {
+        screenController.messageToPlayer("It's a draw!");
+      } else {
+        screenController.messageToPlayer(
+          `${currentPlayer.checkName()} has won the round!`
+        );
+        currentPlayer.winRound();
+      }
+      resetRound();
+    }
+
+    if (verifyGameEnd()) {
+      if (playerOne.checkScore() > playerTwo.checkScore()) {
+        screenController.messageToPlayer(
+          `${playerOne.checkName()} has wone the game!`
+        );
+      } else if (playerOne.checkScore() < playerTwo.checkScore()) {
+        screenController.messageToPlayer(
+          `${playerTwo.checkName()} has wone the game!`
+        );
+      } else if (playerOne.checkScore() === playerTwo.checkScore()) {
+        screenController.messageToPlayer("The game ends with a draw!");
+      }
+
+      resetGame();
+    }
+
+    screenController.updateScreen();
   };
 
   const verifyTurn = (field) => {
@@ -135,11 +113,7 @@ const game = (function () {
       gameboard.checkField(field - 1) === playerOne.checkSymbol() ||
       gameboard.checkField(field - 1) === playerTwo.checkSymbol()
     ) {
-      renderConsole.callout("Field is already occupied!");
-    } else if (field < 1 || field > 9 || field % 1 !== 0) {
-      renderConsole.callout("Not a valid number!");
-    } else if (isNaN(field)) {
-      renderConsole.callout("Not a number at all!");
+      return false;
     } else {
       return true;
     }
@@ -147,6 +121,8 @@ const game = (function () {
 
   const verifyRoundEnd = () => {
     let gc = gameboard.checkField;
+
+    // get symbol of current player
     let csym = turnPlayerOne
       ? playerOne.checkSymbol()
       : playerTwo.checkSymbol();
@@ -164,27 +140,33 @@ const game = (function () {
       (csym === gc(0) && csym === gc(4) && csym === gc(8)) ||
       (csym === gc(6) && csym === gc(4) && csym === gc(2))
     ) {
-      renderConsole.callout("game ends!");
-      roundEnd = true;
+      return true;
     } else if (turnCounter === 9) {
-      renderConsole.callout("It's a draw!");
-      roundEnd = true;
       draw = true;
+      return true;
+    } else {
+      return false;
     }
   };
 
-  const promotingWinner = () => {
-    if (!draw) {
-      let winner = turnPlayerOne ? playerTwo : playerOne; // turn changes after verifyRoundEnd
-      winner.winRound();
-      renderConsole.callout(`${winner.checkName()} has won the round`);
+  const verifyGameEnd = () => {
+    if (roundCounter === roundsTotal) return true;
+  };
+
+  const randomStartPlayer = () => {
+    if (Math.random() < 0.5) {
+      turnPlayerOne = true;
+      screenController.messageToPlayer(`${playerOne.checkName()} begins!`);
+    } else {
+      turnPlayerOne = false;
+      screenController.messageToPlayer(`${playerTwo.checkName()} begins!`);
     }
   };
 
   const resetRound = () => {
     gameboard.clearBoard();
-    roundEnd = false;
     turnCounter = 0;
+    screenController.updateScreen();
   };
 
   const resetGame = () => {
@@ -193,24 +175,26 @@ const game = (function () {
     playerTwo.score = 0;
     roundCounter = 0;
     turnCounter = 0;
+    gameProcess = false;
+    screenController.updateScreen();
   };
 
-  const handleGameEnd = () => {
-    console.log("Game is over");
-  };
-
-  const addRound = () => roundCounter++;
+  const checkGameProcess = () => gameProcess;
   const checkPlayerOne = () => playerOne;
   const checkPlayerTwo = () => playerTwo;
   const checkRoundCounter = () => roundCounter;
   const checkRoundsTotal = () => roundsTotal;
+  const checkTurnPlayerOne = () => turnPlayerOne;
 
   return {
     checkPlayerOne,
     checkPlayerTwo,
+    checkGameProcess,
     checkRoundCounter,
     checkRoundsTotal,
+    checkTurnPlayerOne,
     newGame,
+    handlePlayerMove,
   };
 })();
 
@@ -218,85 +202,55 @@ const game = (function () {
 
 const screenController = (function () {
   const updateScreen = () => {
-    //
+    // Connect Javascript-Data with correspending HTML-Fields
+    document.querySelector("#namePlayer1").textContent = game
+      .checkPlayerOne()
+      .checkName();
+    document.querySelector("#namePlayer2").textContent = game
+      .checkPlayerTwo()
+      .checkName();
+    document.querySelector("#scorePlayer1").textContent = game
+      .checkPlayerOne()
+      .checkScore();
+    document.querySelector("#scorePlayer2").textContent = game
+      .checkPlayerTwo()
+      .checkScore();
+    document.querySelector("#currentRound").textContent =
+      game.checkRoundCounter();
+    document.querySelector("#totalRounds").textContent =
+      game.checkRoundsTotal();
+
+    if (game.checkTurnPlayerOne()) {
+      document.querySelector("#nextTurnText").textContent = game
+        .checkPlayerOne()
+        .checkName();
+    } else {
+      document.querySelector("#nextTurnText").textContent = game
+        .checkPlayerTwo()
+        .checkName();
+    }
   };
 
-  const clickHandlerBoard = () => {
-    qs.fields.forEach((item) => {
-      item.addEventListener("click", () => {
-        console.log("clicked: " + item.value);
-        return item.value;
-      });
-    });
+  const messageToPlayer = (text) => {
+    document.querySelector("#messageToPlayer").textContent = text;
   };
+
+  document.querySelector("#btnNewGame").addEventListener("click", () => {
+    console.log("New Game started");
+    game.newGame();
+  });
+
+  // get clicks on gameboard & send to gamelogic if gameProcess = true
+  document.querySelectorAll(".field").forEach((item) => {
+    item.addEventListener("click", () => {
+      if (game.checkGameProcess()) {
+        game.handlePlayerMove(item.value);
+      }
+    });
+  });
 
   return {
     updateScreen,
-    clickHandlerBoard,
+    messageToPlayer,
   };
 })();
-
-// const clickHandlerBoard = () => {
-//   qs.fields.forEach((item) => {
-//     item.addEventListener("click", () => {
-//       console.log("clicked: " + item.value);
-//       return item.value;
-//     });
-//   });
-// };
-
-// qs.fields.forEach((item) => {
-//   item.addEventListener("click", () => {
-//     console.log("clicked: " + item.value);
-//     return item.value;
-//   });
-// });
-
-// ___RENDER IN CONSOLE___
-
-const renderConsole = (function () {
-  const board = () => {
-    const gcf = gameboard.checkField;
-    console.log(
-      "\n" + " " + gcf(0),
-      gcf(1),
-      gcf(2),
-      "\n",
-      gcf(3),
-      gcf(4),
-      gcf(5),
-      "\n",
-      gcf(6),
-      gcf(7),
-      gcf(8),
-      "\n"
-    );
-  };
-
-  const score = () => {
-    console.log(
-      `Score ${game.checkPlayerOne().checkName()}: ${game
-        .checkPlayerOne()
-        .checkScore()}\n` +
-        `Score ${game.checkPlayerTwo().checkName()}: ${game
-          .checkPlayerTwo()
-          .checkScore()}\n`
-    );
-  };
-
-  const roundsLeft = () => {
-    console.log(
-      `${game.checkRoundCounter()} rounds are played, ${
-        game.checkRoundsTotal() - game.checkRoundCounter()
-      } are left!`
-    );
-  };
-
-  const callout = (call) => {
-    console.log(call);
-  };
-
-  return { board, score, roundsLeft, callout };
-})();
-
-game.newGame(); // START GAME
