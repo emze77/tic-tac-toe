@@ -68,35 +68,34 @@ const game = (function () {
 
     if (verifyTurn(field)) {
       placeMark(field);
-
-      turnCounter++;
-      screenController.messageToPlayer(`Turn: ${turnCounter}`);
-      turnPlayerOne = !turnPlayerOne;
     } else {
       screenController.messageToPlayer("Field is already occupied!");
+    }
+
+    if (verifyRoundEnd()) {
+      handleRoundEnd();
+    } else {
+      turnCounter++;
     }
 
     if (verifyGameEnd()) {
       if (playerOne.checkScore() > playerTwo.checkScore()) {
         screenController.messageToPlayer(
-          `${playerOne.checkName()} has wone the game!`
+          `${playerOne.checkName()} has won the game!`
         );
       } else if (playerOne.checkScore() < playerTwo.checkScore()) {
         screenController.messageToPlayer(
-          `${playerTwo.checkName()} has wone the game!`
+          `${playerTwo.checkName()} has won the game!`
         );
       } else if (playerOne.checkScore() === playerTwo.checkScore()) {
         screenController.messageToPlayer("The game ends with a draw!");
       }
       resetGame();
+    } else {
+      // only if game ends, next turn is not prepared!
+      prepareNextTurn();
     }
 
-    if (gameProcess) {
-      //
-      if (verifyTurn) {
-        
-      }
-    }
     screenController.updateScreen();
   };
 
@@ -133,6 +132,12 @@ const game = (function () {
     resetRound();
   };
 
+  const prepareNextTurn = () => {
+    turnPlayerOne = !turnPlayerOne;
+    if (turnCounter != 0)
+      screenController.messageToPlayer(`Turn: ${turnCounter}`);
+  };
+
   const verifyRoundEnd = () => {
     let gc = gameboard.checkField;
 
@@ -163,7 +168,6 @@ const game = (function () {
     }
   };
 
-
   const verifyGameEnd = () => {
     if (roundCounter === roundsTotal) return true;
   };
@@ -182,6 +186,7 @@ const game = (function () {
     gameboard.clearBoard();
     turnCounter = 0;
     screenController.updateScreen();
+    screenController.resetFields();
   };
 
   const resetGame = () => {
