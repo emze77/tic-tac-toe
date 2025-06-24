@@ -53,6 +53,7 @@ const game = (function () {
   let playerOne = createPlayer("Alice", "X");
   let playerTwo = createPlayer("Bob", "O");
   let turnPlayerOne = true;
+  let currentPlayer = null;
 
   const newGame = () => {
     console.log("New Game started");
@@ -63,30 +64,16 @@ const game = (function () {
 
   // reacts to click on the board while gameProcess = true
   const handlePlayerMove = (field) => {
-    let currentPlayer = turnPlayerOne ? playerOne : playerTwo;
+    currentPlayer = turnPlayerOne ? playerOne : playerTwo;
 
     if (verifyTurn(field)) {
-      turnPlayerOne
-        ? gameboard.placePlayerOne(field)
-        : gameboard.placePlayerTwo(field);
+      placeMark(field);
 
       turnCounter++;
-      screenController.messageToPlayer(`Turn: ${turnCounter}`)
+      screenController.messageToPlayer(`Turn: ${turnCounter}`);
       turnPlayerOne = !turnPlayerOne;
     } else {
       screenController.messageToPlayer("Field is already occupied!");
-    }
-
-    if (verifyRoundEnd()) {
-      if (draw) {
-        screenController.messageToPlayer("It's a draw!");
-      } else {
-        screenController.messageToPlayer(
-          `${currentPlayer.checkName()} has won the round!`
-        );
-        currentPlayer.winRound();
-      }
-      resetRound();
     }
 
     if (verifyGameEnd()) {
@@ -101,10 +88,15 @@ const game = (function () {
       } else if (playerOne.checkScore() === playerTwo.checkScore()) {
         screenController.messageToPlayer("The game ends with a draw!");
       }
-
       resetGame();
     }
 
+    if (gameProcess) {
+      //
+      if (verifyTurn) {
+        
+      }
+    }
     screenController.updateScreen();
   };
 
@@ -117,6 +109,28 @@ const game = (function () {
     } else {
       return true;
     }
+  };
+
+  const placeMark = (field) => {
+    if (turnPlayerOne) {
+      gameboard.placePlayerOne(field);
+      screenController.placePlayerOne(field);
+    } else {
+      gameboard.placePlayerTwo(field);
+      screenController.placePlayerTwo(field);
+    }
+  };
+
+  const handleRoundEnd = () => {
+    if (draw) {
+      screenController.messageToPlayer("It's a draw!");
+    } else {
+      screenController.messageToPlayer(
+        `${currentPlayer.checkName()} has won the round!`
+      );
+      currentPlayer.winRound();
+    }
+    resetRound();
   };
 
   const verifyRoundEnd = () => {
@@ -149,6 +163,7 @@ const game = (function () {
     }
   };
 
+
   const verifyGameEnd = () => {
     if (roundCounter === roundsTotal) return true;
   };
@@ -176,6 +191,7 @@ const game = (function () {
     roundCounter = 0;
     turnCounter = 0;
     gameProcess = false;
+    screenController.resetFields();
     screenController.updateScreen();
   };
 
@@ -209,6 +225,12 @@ const screenController = (function () {
     document.querySelector("#namePlayer2").textContent = game
       .checkPlayerTwo()
       .checkName();
+    document.querySelector("#symbolPlayer1").textContent = game
+      .checkPlayerOne()
+      .checkSymbol();
+    document.querySelector("#symbolPlayer2").textContent = game
+      .checkPlayerTwo()
+      .checkSymbol();
     document.querySelector("#scorePlayer1").textContent = game
       .checkPlayerOne()
       .checkScore();
@@ -240,8 +262,10 @@ const screenController = (function () {
     game.newGame();
   });
 
+  const fields = document.querySelectorAll(".field");
+
   // get clicks on gameboard & send to gamelogic if gameProcess = true
-  document.querySelectorAll(".field").forEach((item) => {
+  fields.forEach((item) => {
     item.addEventListener("click", () => {
       if (game.checkGameProcess()) {
         game.handlePlayerMove(item.value);
@@ -249,8 +273,25 @@ const screenController = (function () {
     });
   });
 
+  const placePlayerOne = (field) => {
+    fields[field - 1].textContent = game.checkPlayerOne().checkSymbol();
+  };
+
+  const placePlayerTwo = (field) => {
+    fields[field - 1].textContent = game.checkPlayerTwo().checkSymbol();
+  };
+
+  const resetFields = () => {
+    fields.forEach((item) => {
+      item.textContent = "";
+    });
+  };
+
   return {
     updateScreen,
     messageToPlayer,
+    placePlayerOne,
+    placePlayerTwo,
+    resetFields,
   };
 })();
