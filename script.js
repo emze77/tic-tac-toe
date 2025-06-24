@@ -1,3 +1,24 @@
+// ___QUERY SELECTORS___
+
+const qs = {
+  player1: document.querySelector("#namePlayer1"),
+  scorePlayer1: document.querySelector("#scorePlayer1"),
+  player2: document.querySelector("#namePlayer2"),
+  scorePlayer2: document.querySelector("#scorePlayer2"),
+  nextTurntext: document.querySelector("#nextTurntext"),
+  currentRound: document.querySelector("#currentRound"),
+  fields: document.querySelectorAll(".field"),
+};
+
+
+qs.fields.forEach((item) => {
+    item.addEventListener("click", () => {
+      console.log("clicked: " + item.value);
+      return item.value;
+    });
+  });
+
+
 // ___GAMEBOARD (IIFE-MODULE)___
 
 const gameboard = (function () {
@@ -44,6 +65,8 @@ function createPlayer(name, symbol) {
 // ___GAME-LOGIC (IIFE-Module)____
 
 const game = (function () {
+  const consoleMode = false;
+
   let roundsTotal = 3;
   let roundCounter = 0;
   let turnCounter = 0;
