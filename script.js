@@ -63,8 +63,6 @@ function createPlayer(name, symbol) {
 // ___GAME-LOGIC (IIFE-Module)____
 
 const game = (function () {
-  const consoleMode = false;
-
   let roundsTotal = 3;
   let roundCounter = 0;
   let turnCounter = 0;
@@ -89,7 +87,7 @@ const game = (function () {
     legitTurn = false;
     currentPlayer = turnPlayerOne ? playerOne : playerTwo;
 
-    if (verifyTurn(field)) {
+    if (verifyTurn(field - 1)) {
       placeMark(field);
       turnCounter++;
       legitTurn = true;
@@ -98,7 +96,19 @@ const game = (function () {
       legitTurn = false;
     }
 
-    if (verifyRoundEnd()) {
+    let winningCombination = checkForWin();
+
+    if (winningCombination) {
+      screenController.highlightWinningCombination(winningCombination);
+      handleRoundEnd();
+    }
+
+    if (turnCounter === 9) {
+      draw = true;
+      handleRoundEnd();
+    }
+
+    if (checkForWin()) {
       handleRoundEnd();
     }
 
@@ -109,16 +119,11 @@ const game = (function () {
     if (legitTurn && gameProcess) prepareNextTurn();
   };
 
-  const verifyTurn = (field) => {
-    if (
-      // -1: array starts with 0 and fields are from 1 to 9
-      gameboard.checkField(field - 1) === playerOne.checkSymbol() ||
-      gameboard.checkField(field - 1) === playerTwo.checkSymbol()
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+  const verifyTurn = (fieldIndex) => {
+    return (
+      gameboard.checkField(fieldIndex) !== playerOne.checkSymbol() &&
+      gameboard.checkField(fieldIndex) !== playerTwo.checkSymbol()
+    );
   };
 
   const placeMark = (field) => {
@@ -165,7 +170,11 @@ const game = (function () {
     screenController.updateScreen();
   };
 
-  const verifyRoundEnd = () => {
+  const checkForWin = () => {
+    if (turnCounter === 9) {
+      draw = true;
+      return true;
+    }
 
     const possibleCombinations = [
       [0, 1, 2],
@@ -184,20 +193,11 @@ const game = (function () {
 
     let gc = gameboard.checkField;
 
-    let winningCombination = possibleCombinations.find((el) => {
-      return gc(el[0]) === csym && gc(el[1]) === csym && gc(el[2]) === csym;
+    return possibleCombinations.find((el) => {
+      return el.every(e => gc(e) === csym);
     });
 
-    if (winningCombination) {
-      console.log("Winning Combination: " + winningCombination);
-      screenController.highlightWinningCombination(winningCombination);
-      return true;
-    } else if (turnCounter === 9) {
-      draw = true;
-      return true;
-    } 
   };
-
 
   const verifyGameEnd = () => {
     if (roundCounter === roundsTotal) return true;
