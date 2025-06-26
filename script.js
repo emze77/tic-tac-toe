@@ -10,14 +10,12 @@ const qs = {
   fields: document.querySelectorAll(".field"),
 };
 
-
 qs.fields.forEach((item) => {
-    item.addEventListener("click", () => {
-      console.log("clicked: " + item.value);
-      return item.value;
-    });
+  item.addEventListener("click", () => {
+    console.log("clicked: " + item.value);
+    return item.value;
   });
-
+});
 
 // ___GAMEBOARD (IIFE-MODULE)___
 
@@ -76,6 +74,7 @@ const game = (function () {
   let playerOne = createPlayer("Alice", "X");
   let playerTwo = createPlayer("Bob", "O");
   let turnPlayerOne = true;
+  let legitTurn = false;
   let currentPlayer = null;
 
   const newGame = () => {
@@ -87,43 +86,32 @@ const game = (function () {
 
   // reacts to click on the board while gameProcess = true
   const handlePlayerMove = (field) => {
+    legitTurn = false;
     currentPlayer = turnPlayerOne ? playerOne : playerTwo;
 
     if (verifyTurn(field)) {
       placeMark(field);
+      turnCounter++;
+      legitTurn = true;
     } else {
       screenController.messageToPlayer("Field is already occupied!");
+      legitTurn = false;
     }
 
     if (verifyRoundEnd()) {
       handleRoundEnd();
-    } else {
-      turnCounter++;
     }
 
     if (verifyGameEnd()) {
-      if (playerOne.checkScore() > playerTwo.checkScore()) {
-        screenController.messageToPlayer(
-          `${playerOne.checkName()} has won the game!`
-        );
-      } else if (playerOne.checkScore() < playerTwo.checkScore()) {
-        screenController.messageToPlayer(
-          `${playerTwo.checkName()} has won the game!`
-        );
-      } else if (playerOne.checkScore() === playerTwo.checkScore()) {
-        screenController.messageToPlayer("The game ends with a draw!");
-      }
-      resetGame();
-    } else {
-      // only if game ends, next turn is not prepared!
-      prepareNextTurn();
+      handleGameEnd();
     }
 
-    screenController.updateScreen();
+    if (legitTurn && gameProcess) prepareNextTurn();
   };
 
   const verifyTurn = (field) => {
     if (
+      // -1: array starts with 0 and fields are from 1 to 9
       gameboard.checkField(field - 1) === playerOne.checkSymbol() ||
       gameboard.checkField(field - 1) === playerTwo.checkSymbol()
     ) {
@@ -155,10 +143,26 @@ const game = (function () {
     resetRound();
   };
 
+  const handleGameEnd = () => {
+    if (playerOne.checkScore() > playerTwo.checkScore()) {
+      screenController.messageToPlayer(
+        `${playerOne.checkName()} has won the game!`
+      );
+    } else if (playerOne.checkScore() < playerTwo.checkScore()) {
+      screenController.messageToPlayer(
+        `${playerTwo.checkName()} has won the game!`
+      );
+    } else if (playerOne.checkScore() === playerTwo.checkScore()) {
+      screenController.messageToPlayer("The game ends with a draw!");
+    }
+    resetGame();
+  };
+
   const prepareNextTurn = () => {
     turnPlayerOne = !turnPlayerOne;
     if (turnCounter != 0)
       screenController.messageToPlayer(`Turn: ${turnCounter}`);
+    screenController.updateScreen();
   };
 
   const verifyRoundEnd = () => {
@@ -314,6 +318,10 @@ const screenController = (function () {
       item.textContent = "";
     });
   };
+
+  const highlightWinningCombination = (combination) => {
+    
+  }
 
   return {
     updateScreen,
