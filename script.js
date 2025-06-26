@@ -166,34 +166,38 @@ const game = (function () {
   };
 
   const verifyRoundEnd = () => {
-    let gc = gameboard.checkField;
 
-    // get symbol of current player
+    const possibleCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8], // horiconal
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8], // vertical
+      [0, 4, 8],
+      [6, 4, 2], // diagonal
+    ];
+
     let csym = turnPlayerOne
       ? playerOne.checkSymbol()
       : playerTwo.checkSymbol();
 
-    if (
-      // horicontal winning oppertunities
-      (csym === gc(0) && csym === gc(1) && csym === gc(2)) ||
-      (csym === gc(3) && csym === gc(4) && csym === gc(5)) ||
-      (csym === gc(6) && csym === gc(7) && csym === gc(8)) ||
-      // vertical winning oppertunities
-      (csym === gc(0) && csym === gc(3) && csym === gc(6)) ||
-      (csym === gc(1) && csym === gc(4) && csym === gc(7)) ||
-      (csym === gc(2) && csym === gc(5) && csym === gc(8)) ||
-      // diagonal winning oppertunities
-      (csym === gc(0) && csym === gc(4) && csym === gc(8)) ||
-      (csym === gc(6) && csym === gc(4) && csym === gc(2))
-    ) {
+    let gc = gameboard.checkField;
+
+    let winningCombination = possibleCombinations.find((el) => {
+      return gc(el[0]) === csym && gc(el[1]) === csym && gc(el[2]) === csym;
+    });
+
+    if (winningCombination) {
+      console.log("Winning Combination: " + winningCombination);
+      screenController.highlightWinningCombination(winningCombination);
       return true;
     } else if (turnCounter === 9) {
       draw = true;
       return true;
-    } else {
-      return false;
-    }
+    } 
   };
+
 
   const verifyGameEnd = () => {
     if (roundCounter === roundsTotal) return true;
@@ -319,9 +323,7 @@ const screenController = (function () {
     });
   };
 
-  const highlightWinningCombination = (combination) => {
-    
-  }
+  const highlightWinningCombination = (combination) => {};
 
   return {
     updateScreen,
@@ -329,5 +331,6 @@ const screenController = (function () {
     placePlayerOne,
     placePlayerTwo,
     resetFields,
+    highlightWinningCombination,
   };
 })();
