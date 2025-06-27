@@ -60,6 +60,7 @@ const game = (function () {
     console.log("New Game started");
     resetGame();
     randomStartPlayer();
+    screenController.highlightCurrentPlayer();
     gameProcess = true;
   };
 
@@ -126,22 +127,28 @@ const game = (function () {
       );
       currentPlayer.winRound();
     }
+    roundCounter++;
     resetRound();
   };
 
   const handleGameEnd = () => {
+    let winner;
+
     if (playerOne.checkScore() > playerTwo.checkScore()) {
       screenController.messageToPlayer(
         `${playerOne.checkName()} has won the game!`
       );
+      winner = "playerOne";
     } else if (playerOne.checkScore() < playerTwo.checkScore()) {
       screenController.messageToPlayer(
         `${playerTwo.checkName()} has won the game!`
       );
+      winner = "playerTwo";
     } else if (playerOne.checkScore() === playerTwo.checkScore()) {
       screenController.messageToPlayer("The game ends with a draw!");
     }
     resetGame();
+    screenController.highlightWinner(winner);
   };
 
   const prepareNextTurn = () => {
@@ -203,6 +210,7 @@ const game = (function () {
     roundCounter = 0;
     turnCounter = 0;
     gameProcess = false;
+    screenController.resetPlayerHighlights();
     screenController.resetFields();
     screenController.updateScreen();
   };
@@ -326,12 +334,26 @@ const screenController = (function () {
   };
 
   const highlightCurrentPlayer = () => {
+    resetPlayerHighlights();
     if (game.checkTurnPlayerOne()) {
       player1Container.classList.add("highlightTurnP1");
-      player2Container.classList.remove("highlightTurnP2");
     } else {
       player2Container.classList.add("highlightTurnP2");
-      player1Container.classList.remove("highlightTurnP1");
+    }
+  };
+
+  const resetPlayerHighlights = () => {
+    player1Container.classList.remove("highlightTurnP1");
+    player2Container.classList.remove("highlightTurnP2");
+    player1Container.classList.remove("highlightWinner");
+    player2Container.classList.remove("highlightWinner");
+  };
+
+  const highlightWinner = (player) => {
+    if (player === "playerOne") {
+      player1Container.classList.add("highlightWinner");
+    } else {
+      player2Container.classList.add("highlightWinner");
     }
   };
 
@@ -344,6 +366,8 @@ const screenController = (function () {
     highlightWinningCombination,
     removeHighlights,
     highlightCurrentPlayer,
+    resetPlayerHighlights,
+    highlightWinner,
   };
 })();
 

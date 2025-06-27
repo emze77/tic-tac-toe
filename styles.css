@@ -59,6 +59,13 @@ main {
   }
 }
 
+.playerName:hover,
+.playerSymbol:hover,
+.totalRounds:hover {
+  cursor: pointer;
+  color: var(--fg3);
+}
+
 .highlight {
   background-color: var(--orange);
 }
@@ -80,21 +87,26 @@ main {
   border: 5px solid var(--blue-dim);
 }
 
+.highlightWinner {
+  background-color: var(--yellow);
+  color: var(--bg);
+  border: 5px solid var(--yellow-dim);
+}
 
 .highlightDraw {
-    background-color: var(--red-dim);
+  background-color: var(--red-dim);
 }
 
 .main-footer {
-    text-align: center;
+  text-align: center;
 }
 
 .btnNewGame {
-    width: 160px;
-    height: 60px;
-    background-color: var(--bg-4);
-    color: var(--fg);
-    font-size: 20px;
+  width: 160px;
+  height: 60px;
+  background-color: var(--bg-4);
+  color: var(--fg);
+  font-size: 20px;
 }
 
 .bold {
