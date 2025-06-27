@@ -146,6 +146,7 @@ const game = (function () {
 
   const prepareNextTurn = () => {
     turnPlayerOne = !turnPlayerOne;
+    screenController.highlightCurrentPlayer();
     if (turnCounter != 0)
       screenController.messageToPlayer(`Turn: ${turnCounter}`);
     screenController.updateScreen();
@@ -232,13 +233,15 @@ const screenController = (function () {
   const player1Name = document.querySelector("#namePlayer1");
   const player1Symbol = document.querySelector("#symbolPlayer1");
   const player1Score = document.querySelector("#scorePlayer1");
+  const player1Container = document.querySelector(".containerPlayer1");
 
   const player2Name = document.querySelector("#namePlayer2");
   const player2Symbol = document.querySelector("#symbolPlayer2");
   const player2Score = document.querySelector("#scorePlayer2");
+  const player2Container = document.querySelector(".containerPlayer2");
 
   const fields = document.querySelectorAll(".field");
-  
+
   const currentRounds = document.querySelector("#currentRound");
   const totalRounds = document.querySelector("#totalRounds");
   const nextTurnText = document.querySelector("#nextTurnText");
@@ -322,6 +325,16 @@ const screenController = (function () {
     }
   };
 
+  const highlightCurrentPlayer = () => {
+    if (game.checkTurnPlayerOne()) {
+      player1Container.classList.add("highlightTurnP1");
+      player2Container.classList.remove("highlightTurnP2");
+    } else {
+      player2Container.classList.add("highlightTurnP2");
+      player1Container.classList.remove("highlightTurnP1");
+    }
+  };
+
   return {
     updateScreen,
     messageToPlayer,
@@ -330,6 +343,7 @@ const screenController = (function () {
     resetFields,
     highlightWinningCombination,
     removeHighlights,
+    highlightCurrentPlayer,
   };
 })();
 

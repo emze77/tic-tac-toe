@@ -55,7 +55,7 @@ main {
   font-size: 30px;
 
   &:hover {
-    background-color: var(--blue-dim);
+    background-color: var(--yellow-dim);
   }
 }
 
@@ -68,11 +68,18 @@ main {
   transition: background-color 2s 0.5s;
 }
 
-.highlightTurn {
-  background-color: var(--green);
+.highlightTurnP1 {
+  background-color: var(--red);
   color: var(--bg);
-  border: 5px solid var(--green-dim);
+  border: 5px solid var(--red-dim);
 }
+
+.highlightTurnP2 {
+  background-color: var(--blue);
+  color: var(--bg);
+  border: 5px solid var(--blue-dim);
+}
+
 
 .highlightDraw {
     background-color: var(--red-dim);
