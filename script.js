@@ -1,22 +1,3 @@
-// ___QUERY SELECTORS___
-
-const qs = {
-  player1: document.querySelector("#namePlayer1"),
-  scorePlayer1: document.querySelector("#scorePlayer1"),
-  player2: document.querySelector("#namePlayer2"),
-  scorePlayer2: document.querySelector("#scorePlayer2"),
-  nextTurntext: document.querySelector("#nextTurntext"),
-  currentRound: document.querySelector("#currentRound"),
-  fields: document.querySelectorAll(".field"),
-};
-
-qs.fields.forEach((item) => {
-  item.addEventListener("click", () => {
-    console.log("clicked: " + item.value);
-    return item.value;
-  });
-});
-
 // ___GAMEBOARD (IIFE-MODULE)___
 
 const gameboard = (function () {
@@ -247,52 +228,52 @@ const game = (function () {
 // ___SCREEN CONTROLLER___
 
 const screenController = (function () {
+  // Connect Javascript-Data with correspending HTML-Fields
+  const player1Name = document.querySelector("#namePlayer1");
+  const player1Symbol = document.querySelector("#symbolPlayer1");
+  const player1Score = document.querySelector("#scorePlayer1");
+
+  const player2Name = document.querySelector("#namePlayer2");
+  const player2Symbol = document.querySelector("#symbolPlayer2");
+  const player2Score = document.querySelector("#scorePlayer2");
+
+  const fields = document.querySelectorAll(".field");
+  
+  const currentRounds = document.querySelector("#currentRound");
+  const totalRounds = document.querySelector("#totalRounds");
+  const nextTurnText = document.querySelector("#nextTurnText");
+  const message = document.querySelector("#messageToPlayer");
+  const btnNewGame = document.querySelector("#btnNewGame");
+
+  const checkP1 = game.checkPlayerOne();
+  const checkP2 = game.checkPlayerTwo();
+
   const updateScreen = () => {
-    // Connect Javascript-Data with correspending HTML-Fields
-    document.querySelector("#namePlayer1").textContent = game
-      .checkPlayerOne()
-      .checkName();
-    document.querySelector("#namePlayer2").textContent = game
-      .checkPlayerTwo()
-      .checkName();
-    document.querySelector("#symbolPlayer1").textContent = game
-      .checkPlayerOne()
-      .checkSymbol();
-    document.querySelector("#symbolPlayer2").textContent = game
-      .checkPlayerTwo()
-      .checkSymbol();
-    document.querySelector("#scorePlayer1").textContent = game
-      .checkPlayerOne()
-      .checkScore();
-    document.querySelector("#scorePlayer2").textContent = game
-      .checkPlayerTwo()
-      .checkScore();
-    document.querySelector("#currentRound").textContent =
-      game.checkRoundCounter();
-    document.querySelector("#totalRounds").textContent =
-      game.checkRoundsTotal();
+    player1Name.textContent = checkP1.checkName();
+    player2Name.textContent = checkP2.checkName();
+    player1Symbol.textContent = checkP1.checkSymbol();
+    player2Symbol.textContent = checkP2.checkSymbol();
+    player1Score.textContent = checkP1.checkScore();
+    player2Score.textContent = checkP2.checkScore();
+
+    currentRounds.textContent = game.checkRoundCounter();
+    totalRounds.textContent = game.checkRoundsTotal();
 
     if (game.checkTurnPlayerOne()) {
-      document.querySelector("#nextTurnText").textContent = game
-        .checkPlayerOne()
-        .checkName();
+      nextTurnText.textContent = checkP1.checkName();
     } else {
-      document.querySelector("#nextTurnText").textContent = game
-        .checkPlayerTwo()
-        .checkName();
+      nextTurnText.textContent = checkP2.checkName();
     }
   };
 
   const messageToPlayer = (text) => {
-    document.querySelector("#messageToPlayer").textContent = text;
+    message.textContent = text;
   };
 
-  document.querySelector("#btnNewGame").addEventListener("click", () => {
+  btnNewGame.addEventListener("click", () => {
     console.log("New Game started");
     game.newGame();
   });
-
-  const fields = document.querySelectorAll(".field");
 
   // get clicks on game board & send to game logic if gameProcess = true
   fields.forEach((item) => {
@@ -318,7 +299,6 @@ const screenController = (function () {
   };
 
   const highlightWinningCombination = (combination) => {
-
     // remove highlights first to stop dissolve-animation in very quick games
     removeHighlights(combination);
 
