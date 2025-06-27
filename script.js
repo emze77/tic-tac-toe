@@ -309,8 +309,6 @@ const screenController = (function () {
     setTimeout(() => {
       for (let i = 0; i < 3; i++) {
         fields[combination[i]].classList.add("highlight-dissolve");
-        //increase specificity
-        fields[combination[i]].classList.add("highlight-dissolve");
       }
     }, 700);
 
@@ -320,7 +318,6 @@ const screenController = (function () {
   const removeHighlights = (combination) => {
     for (let i = 0; i < 3; i++) {
       fields[combination[i]].classList.remove("highlight");
-      fields[combination[i]].classList.remove("highlight-dissolve");
       fields[combination[i]].classList.remove("highlight-dissolve");
     }
   };
