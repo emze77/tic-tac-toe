@@ -7,23 +7,25 @@
     <title>Tic Tac Toe</title>
   </head>
   <body>
-    <h1>Tic Tac Toe</h1>
+    <h1> <span class="red">Tic</span> <span class="green">Tac</span> <span class="blue">Toe</span></h1>
 
     <main>
-      <section id="section1">
+      <section class="section1 sideSection">
         <div id="nextTurnContainer">
-          <p>Next Turn: <span id="nextTurnText"></span></p>
+          <p>Next Turn: <span id="nextTurnText" class="bold"></span></p>
         </div>
 
-        <div id="containerPlayer1">
-          <h2><span id="namePlayer1"></span> (<span id="symbolPlayer1"></span>) </h2>
+        <div class="containerPlayer1 playerSection">
+          <h2>
+            <span id="namePlayer1"></span> (<span id="symbolPlayer1"></span>)
+          </h2>
           <p>Score: <span class="playerScore" id="scorePlayer1">0</span></p>
         </div>
       </section>
 
-      <section id="section2">
-        <div id="gameboard">
-          <button class="field" value="1"  id="btn1"></button>
+      <section class="section2">
+        <div class="gameboard">
+          <button class="field" value="1" id="btn1"></button>
           <button class="field" value="2" id="btn2"></button>
           <button class="field" value="3" id="btn3"></button>
           <button class="field" value="4" id="btn4"></button>
@@ -33,25 +35,34 @@
           <button class="field" value="8" id="btn8"></button>
           <button class="field" value="9" id="btn9"></button>
         </div>
+      </section>
+
+      <section class="section3 sideSection ">
+        <div id="roundsContainer">
+          <p>
+            Round: <span id="currentRound" class="bold"></span> <span class="bold">/</span>
+            <span id="totalRounds" class="bold"></span>
+          </p>
+        </div>
+
+        <div class="containerPlayer2 playerSection highlightTurn">
+          <h2>
+            <span id="namePlayer2"></span> (<span id="symbolPlayer2"></span>)
+          </h2>
+          <p>Score: <span class="playerScore" id="scorePlayer2">0</span></p>
+        </div>
+      </section>
+    </main>
+    <section class="main-footer">
         <div class="messageToPlayerContainer">
-          <p class="messageToPlayer" id="messageToPlayer">Messages appear here!</p>
+          <p class="messageToPlayer" id="messageToPlayer">
+            Ready to start a game?
+          </p>
         </div>
         <div class="newGameButtonContainer">
           <button id="btnNewGame" class="btnNewGame">New Game</button>
         </div>
       </section>
-
-      <section id="section3">
-        <div id="roundsContainer">
-          <p>Round: <span id="currentRound"></span> / <span id="totalRounds"></span></p>
-        </div>
-
-        <div id="containerPlayer2">
-          <h2><span id="namePlayer2"></span> (<span id="symbolPlayer2"></span>) </h2>
-          <p class="playerScore" id="scorePlayer2">Score: 0</p>
-        </div>
-      </section>
-    </main>
 
     <script src="script.js"></script>
   </body>
