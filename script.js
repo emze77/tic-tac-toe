@@ -171,15 +171,10 @@ const game = (function () {
   };
 
   const checkForWin = () => {
-    if (turnCounter === 9) {
-      draw = true;
-      return true;
-    }
-
     const possibleCombinations = [
       [0, 1, 2],
       [3, 4, 5],
-      [6, 7, 8], // horiconal
+      [6, 7, 8], // horizontal
       [0, 3, 6],
       [1, 4, 7],
       [2, 5, 8], // vertical
@@ -194,9 +189,8 @@ const game = (function () {
     let gc = gameboard.checkField;
 
     return possibleCombinations.find((el) => {
-      return el.every(e => gc(e) === csym);
+      return el.every((e) => gc(e) === csym);
     });
-
   };
 
   const verifyGameEnd = () => {
@@ -300,7 +294,7 @@ const screenController = (function () {
 
   const fields = document.querySelectorAll(".field");
 
-  // get clicks on gameboard & send to gamelogic if gameProcess = true
+  // get clicks on game board & send to game logic if gameProcess = true
   fields.forEach((item) => {
     item.addEventListener("click", () => {
       if (game.checkGameProcess()) {
@@ -323,7 +317,27 @@ const screenController = (function () {
     });
   };
 
-  const highlightWinningCombination = (combination) => {};
+  const highlightWinningCombination = (combination) => {
+    for (let i = 0; i < 3; i++) {
+      fields[combination[i]].classList.add("highlight");
+    }
+
+    setTimeout(() => {
+      for (let i = 0; i < 3; i++) {
+        fields[combination[i]].classList.add("highlight-dissolve");
+        //increase specificity 
+        fields[combination[i]].classList.add("highlight-dissolve");
+      }
+    }, 700);
+
+    setTimeout(() => {
+      for (let i = 0; i < 3; i++) {
+        fields[combination[i]].classList.remove("highlight");
+        fields[combination[i]].classList.remove("highlight-dissolve");
+        fields[combination[i]].classList.remove("highlight-dissolve");
+      }
+    }, 4000);
+  };
 
   return {
     updateScreen,

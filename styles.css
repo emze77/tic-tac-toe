@@ -38,3 +38,12 @@ main {
         background-color:#BABDBF;
     }
 }
+
+.highlight {
+    background-color: orange;
+}
+
+.highlight-dissolve {
+    background-color: #525559;
+    transition: background-color 2s 0.5s;
+}
