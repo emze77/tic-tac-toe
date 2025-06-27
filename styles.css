@@ -1,49 +1,95 @@
+@import url(./css/gruvbox-dark.css);
 
-html {
-    background-color: #525559;
-    color: #F2F2F2;
+:root {
+  background-color: var(--bg);
+  color: var(--fg);
+  border: var(--fg);
+  font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
+    Arial, sans-serif;
+  font-weight: normal;
+  font-size: 18px;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 50px;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 50px;
 }
 
 main {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-template-rows: 240px;
-    justify-items: center;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 300px;
+  justify-items: center;
+  align-items: center;
 }
 
+.sideSection {
+  display: grid;
+  grid-template-rows: 60px 200px;
+  margin: 20px;
+}
 
-#gameboard {
-    justify-self: center;
-    display: grid;
-    gap: 5px;
-    grid-template-columns: 80px 80px 80px;
-    grid-template-rows: 80px 80px 80px;
+.playerSection {
+  border: 5px solid var(--fg);
+  padding: 20px;
+  border-radius: 15px;
+  min-width: 150px;
+}
 
-    background-color: #F2F2F2;
-    padding: -50px;
+.gameboard {
+  justify-self: center;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 80px 80px 80px;
+  grid-template-rows: 80px 80px 80px;
+
+  background-color: var(--fg);
+  padding: -50px;
 }
 
 .field {
-    all: unset;
-    background-color: #525559;
-    text-align: center;
+  all: unset;
+  background-color: var(--bg);
+  text-align: center;
+  font-size: 30px;
 
-    &:hover {
-        background-color:#BABDBF;
-    }
+  &:hover {
+    background-color: var(--blue-dim);
+  }
 }
 
 .highlight {
-    background-color: orange;
+  background-color: var(--orange);
 }
 
-.highlight-dissolve {
-    background-color: #525559;
-    transition: background-color 2s 0.5s;
+.highlight-dissolve.highlight-dissolve {
+  background-color: var(--bg);
+  transition: background-color 2s 0.5s;
+}
+
+.highlightTurn {
+  background-color: var(--green);
+  color: var(--bg);
+  border: 5px solid var(--green-dim);
+}
+
+.highlightDraw {
+    background-color: var(--red-dim);
+}
+
+.main-footer {
+    text-align: center;
+}
+
+.btnNewGame {
+    width: 160px;
+    height: 60px;
+    background-color: var(--bg-4);
+    color: var(--fg);
+    font-size: 20px;
+}
+
+.bold {
+  font-weight: 700;
 }
