@@ -335,3 +335,5 @@ const screenController = (function () {
     removeHighlights,
   };
 })();
+
+screenController.updateScreen();
