@@ -155,6 +155,7 @@ const game = (function () {
   };
 
   const handleGameEnd = () => {
+    console.log("game ends")
     let winner;
 
     if (playerOne.checkScore() > playerTwo.checkScore()) {
@@ -206,6 +207,9 @@ const game = (function () {
   };
 
   const verifyGameEnd = () => {
+    console.log("roundcounter: " + roundCounter + " " + isNaN(roundCounter));
+    console.log("roundsTotal: " + roundsTotal + " " + isNaN(roundsTotal));
+    console.log(roundCounter === roundsTotal)
     if (roundCounter === roundsTotal) return true;
   };
 
@@ -243,7 +247,7 @@ const game = (function () {
   const checkPlayerTwo = () => playerTwo;
   const checkRoundCounter = () => roundCounter;
   const checkRoundsTotal = () => roundsTotal;
-  const changeTotalRounds = (newTotalRounds) => (roundsTotal = newTotalRounds);
+  const changeTotalRounds = (newTotalRounds) => (roundsTotal = parseInt(newTotalRounds));
   const checkTurnPlayerOne = () => turnPlayerOne;
 
   return {
@@ -413,6 +417,7 @@ const screenController = (function () {
   configurableItems.forEach((item) => {
     item.addEventListener("click", () => {
       configItem = item;
+      dialogInput.value = "";
       adjustConfigLabel();
       configureDialog.showModal();
     });
@@ -443,6 +448,15 @@ const screenController = (function () {
     // returns input when closing
     configureDialog.close(dialogInput.value); // Have to send the select box value here.
     handleConfigChange();
+    updateScreen();
+  });
+
+  dialogInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      //simulate clicking confirm
+      confirmBtn.click();
+    }
   });
 
   const handleConfigChange = () => {
@@ -457,22 +471,7 @@ const screenController = (function () {
     } else if (configItem === totalRounds) {
       game.changeTotalRounds(configureDialog.returnValue);
     }
-    updateScreen();
   };
-
-  // player1Name.addEventListener("click", () => {
-  //   currentConfiguration = "player1Name";
-  //   dialogLabel.textContent = "Choose name for Player One:";
-  //   configureDialog.showModal();
-  // });
-
-  confirmBtn.addEventListener("click", (event) => {
-    // form should not submit
-    event.preventDefault();
-    // returns input when closing
-    configureDialog.close(dialogInput.value); // Have to send the select box value here.
-    updateScreen();
-  });
 
   return {
     updateScreen,
