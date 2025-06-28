@@ -77,15 +77,15 @@
     </section>
 
     <!-- A modal dialog containing a form -->
-    <dialog id="configureDialog">
+    <dialog id="configureDialog" closedby="any">
       <form>
         <div>
           <label for="dialogInput" id="dialogLabel"> Configure.... </label>
-          <input type="text" id="dialogInput" class="dialogInput" />
+          <input type="text" id="dialogInput" class="dialogInput" autofocus/>
         </div>
         <div>
-          <button value="cancel" formmethod="dialog">Cancel</button>
-          <button id="confirmBtn" value="default">Confirm</button>
+          <button value="cancel" formmethod="dialog" class="modalBtn">Cancel</button>
+          <button id="confirmBtn" value="default" class="modalBtn">Confirm</button>
         </div>
       </form>
     </dialog>
