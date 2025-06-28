@@ -101,6 +101,10 @@ main {
   text-align: center;
 }
 
+.dialogInput {
+  display: block;
+}
+
 .btnNewGame {
   width: 160px;
   height: 60px;

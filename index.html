@@ -7,7 +7,10 @@
     <title>Tic Tac Toe</title>
   </head>
   <body>
-    <h1> <span class="red">Tic</span> <span class="green">Tac</span> <span class="blue">Toe</span></h1>
+    <h1>
+      <span class="red">Tic</span> <span class="green">Tac</span>
+      <span class="blue">Toe</span>
+    </h1>
 
     <main>
       <section class="section1 sideSection">
@@ -17,7 +20,11 @@
 
         <div class="containerPlayer1 playerSection">
           <h2>
-            <span id="namePlayer1" class="playerName"></span> (<span id="symbolPlayer1" class="playerSymbol"></span>)
+            <span id="namePlayer1" class="playerName"></span> (<span
+              id="symbolPlayer1"
+              class="playerSymbol"
+            ></span
+            >)
           </h2>
           <p>Score: <span class="playerScore" id="scorePlayer1">0</span></p>
         </div>
@@ -37,32 +44,51 @@
         </div>
       </section>
 
-      <section class="section3 sideSection ">
+      <section class="section3 sideSection">
         <div id="roundsContainer">
           <p>
-            Round: <span id="currentRound" class="bold"></span> <span class="bold">/</span>
+            Round: <span id="currentRound" class="bold"></span>
+            <span class="bold">/</span>
             <span id="totalRounds" class="bold totalRounds"></span>
           </p>
         </div>
 
         <div class="containerPlayer2 playerSection">
           <h2>
-            <span id="namePlayer2" class="playerName"></span> (<span id="symbolPlayer2" class="playerSymbol"></span>)
+            <span id="namePlayer2" class="playerName"></span> (<span
+              id="symbolPlayer2"
+              class="playerSymbol"
+            ></span
+            >)
           </h2>
           <p>Score: <span class="playerScore" id="scorePlayer2">0</span></p>
         </div>
       </section>
     </main>
     <section class="main-footer">
-        <div class="messageToPlayerContainer">
-          <p class="messageToPlayer" id="messageToPlayer">
-            Ready to start a game?
-          </p>
+      <div class="messageToPlayerContainer">
+        <p class="messageToPlayer" id="messageToPlayer">
+          Ready to start a game?
+        </p>
+      </div>
+      <div class="newGameButtonContainer">
+        <button id="btnNewGame" class="btnNewGame">New Game</button>
+      </div>
+    </section>
+
+    <!-- A modal dialog containing a form -->
+    <dialog id="configureDialog">
+      <form>
+        <div>
+          <label for="dialogInput" id="dialogLabel"> Configure.... </label>
+          <input type="text" id="dialogInput" class="dialogInput" />
         </div>
-        <div class="newGameButtonContainer">
-          <button id="btnNewGame" class="btnNewGame">New Game</button>
+        <div>
+          <button value="cancel" formmethod="dialog">Cancel</button>
+          <button id="confirmBtn" value="default">Confirm</button>
         </div>
-      </section>
+      </form>
+    </dialog>
 
     <script src="script.js"></script>
   </body>

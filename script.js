@@ -1,4 +1,8 @@
-// ___GAMEBOARD (IIFE-MODULE)___
+/* 
+================
+== GAME BOARD ==
+================
+*/
 
 const gameboard = (function () {
   // first row = 1 2 3, second row = 4 5 6, third row = 7 8 9
@@ -26,10 +30,14 @@ const gameboard = (function () {
   };
 })();
 
-// ___PLAYER___
+/* 
+====================
+== CREATE PLAYERS ==
+==================== 
+*/
 
 function createPlayer(name, symbol) {
-  const playerName = name;
+  let playerName = name;
   let playerSymbol = symbol;
   let score = 0;
 
@@ -37,11 +45,26 @@ function createPlayer(name, symbol) {
   const checkSymbol = () => playerSymbol;
   const checkScore = () => score;
   const winRound = () => score++;
+  const resetScore = () => (score = 0);
+  const changeName = (newName) => (playerName = newName);
+  const changeSymbol = (newSymbol) => (playerSymbol = newSymbol);
 
-  return { checkName, checkSymbol, checkScore, winRound };
+  return {
+    checkName,
+    checkSymbol,
+    checkScore,
+    winRound,
+    resetScore,
+    changeName,
+    changeSymbol,
+  };
 }
 
-// ___GAME-LOGIC (IIFE-Module)____
+/* 
+================
+== GAME LOGIC ==
+================ 
+*/
 
 const game = (function () {
   let roundsTotal = 3;
@@ -205,8 +228,8 @@ const game = (function () {
 
   const resetGame = () => {
     gameboard.clearBoard();
-    playerOne.score = 0;
-    playerTwo.score = 0;
+    playerOne.resetScore();
+    playerTwo.resetScore();
     roundCounter = 0;
     turnCounter = 0;
     gameProcess = false;
@@ -220,6 +243,7 @@ const game = (function () {
   const checkPlayerTwo = () => playerTwo;
   const checkRoundCounter = () => roundCounter;
   const checkRoundsTotal = () => roundsTotal;
+  const changeTotalRounds = (newTotalRounds) => (roundsTotal = newTotalRounds);
   const checkTurnPlayerOne = () => turnPlayerOne;
 
   return {
@@ -229,15 +253,20 @@ const game = (function () {
     checkRoundCounter,
     checkRoundsTotal,
     checkTurnPlayerOne,
+    changeTotalRounds,
     newGame,
     handlePlayerMove,
   };
 })();
 
-// ___SCREEN CONTROLLER___
+/* 
+=======================
+== SCREEN CONTROLLER ==
+======================= 
+*/
 
 const screenController = (function () {
-  // Connect Javascript-Data with correspending HTML-Fields
+  // Connections of Players
   const player1Name = document.querySelector("#namePlayer1");
   const player1Symbol = document.querySelector("#symbolPlayer1");
   const player1Score = document.querySelector("#scorePlayer1");
@@ -248,6 +277,7 @@ const screenController = (function () {
   const player2Score = document.querySelector("#scorePlayer2");
   const player2Container = document.querySelector(".containerPlayer2");
 
+  // Connection of Fields and Data
   const fields = document.querySelectorAll(".field");
 
   const currentRounds = document.querySelector("#currentRound");
@@ -256,6 +286,12 @@ const screenController = (function () {
   const message = document.querySelector("#messageToPlayer");
   const btnNewGame = document.querySelector("#btnNewGame");
 
+  // Connection to Dialog-Box
+  const dialogLabel = document.querySelector("#dialogLabel");
+  const dialogInput = document.querySelector("#dialogInput");
+  const confirmBtn = document.querySelector("#confirmBtn");
+
+  // abbreviations
   const checkP1 = game.checkPlayerOne();
   const checkP2 = game.checkPlayerTwo();
 
@@ -277,10 +313,12 @@ const screenController = (function () {
     }
   };
 
+  // different messages for the players
   const messageToPlayer = (text) => {
     message.textContent = text;
   };
 
+  // Button to start the game
   btnNewGame.addEventListener("click", () => {
     console.log("New Game started");
     game.newGame();
@@ -295,6 +333,7 @@ const screenController = (function () {
     });
   });
 
+  // placing and removing marks
   const placePlayerOne = (field) => {
     fields[field - 1].textContent = game.checkPlayerOne().checkSymbol();
   };
@@ -309,6 +348,7 @@ const screenController = (function () {
     });
   };
 
+  // adding and removing different highlights
   const highlightWinningCombination = (combination) => {
     // remove highlights first to stop dissolve-animation in very quick games
     removeHighlights(combination);
@@ -317,6 +357,7 @@ const screenController = (function () {
       fields[combination[i]].classList.add("highlight");
     }
 
+    // dissolve-animation
     setTimeout(() => {
       for (let i = 0; i < 3; i++) {
         fields[combination[i]].classList.add("highlight-dissolve");
@@ -342,13 +383,6 @@ const screenController = (function () {
     }
   };
 
-  const resetPlayerHighlights = () => {
-    player1Container.classList.remove("highlightTurnP1");
-    player2Container.classList.remove("highlightTurnP2");
-    player1Container.classList.remove("highlightWinner");
-    player2Container.classList.remove("highlightWinner");
-  };
-
   const highlightWinner = (player) => {
     if (player === "playerOne") {
       player1Container.classList.add("highlightWinner");
@@ -356,6 +390,89 @@ const screenController = (function () {
       player2Container.classList.add("highlightWinner");
     }
   };
+
+  const resetPlayerHighlights = () => {
+    player1Container.classList.remove("highlightTurnP1");
+    player2Container.classList.remove("highlightTurnP2");
+    player1Container.classList.remove("highlightWinner");
+    player2Container.classList.remove("highlightWinner");
+  };
+
+  // configure names, symbols and amount of rounds to play
+
+  let configItem;
+
+  let configurableItems = [
+    player1Name,
+    player1Symbol,
+    player2Name,
+    player2Symbol,
+    totalRounds,
+  ];
+
+  configurableItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      configItem = item;
+      adjustConfigLabel();
+      configureDialog.showModal();
+    });
+  });
+
+  const adjustConfigLabel = () => {
+    if (configItem === player1Name) {
+      dialogLabel.textContent = "Choose name for Player One:";
+      dialogInput.setAttribute("maxlength", 10);
+    } else if (configItem === player1Symbol) {
+      dialogInput.setAttribute("maxlength", 1);
+      dialogLabel.textContent = "Choose symbol for Player One:";
+    } else if (configItem === player2Name) {
+      dialogInput.setAttribute("maxlength", 10);
+      dialogLabel.textContent = "Choose name for Player Two:";
+    } else if (configItem === player2Symbol) {
+      dialogInput.setAttribute("maxlength", 1);
+      dialogLabel.textContent = "Choose symbol for Player Two:";
+    } else if (configItem === totalRounds) {
+      dialogLabel.textContent = "Set total amount of rounds:";
+      dialogInput.setAttribute("type", "number");
+    }
+  };
+
+  confirmBtn.addEventListener("click", (event) => {
+    // form should not submit
+    event.preventDefault();
+    // returns input when closing
+    configureDialog.close(dialogInput.value); // Have to send the select box value here.
+    handleConfigChange();
+  });
+
+  const handleConfigChange = () => {
+    if (configItem === player1Name) {
+      checkP1.changeName(configureDialog.returnValue);
+    } else if (configItem === player1Symbol) {
+      checkP1.changeSymbol(configureDialog.returnValue);
+    } else if (configItem === player2Name) {
+      checkP2.changeName(configureDialog.returnValue);
+    } else if (configItem === player2Symbol) {
+      checkP2.changeSymbol(configureDialog.returnValue);
+    } else if (configItem === totalRounds) {
+      game.changeTotalRounds(configureDialog.returnValue);
+    }
+    updateScreen();
+  };
+
+  // player1Name.addEventListener("click", () => {
+  //   currentConfiguration = "player1Name";
+  //   dialogLabel.textContent = "Choose name for Player One:";
+  //   configureDialog.showModal();
+  // });
+
+  confirmBtn.addEventListener("click", (event) => {
+    // form should not submit
+    event.preventDefault();
+    // returns input when closing
+    configureDialog.close(dialogInput.value); // Have to send the select box value here.
+    updateScreen();
+  });
 
   return {
     updateScreen,
