@@ -22,6 +22,8 @@ main {
   grid-template-rows: 300px;
   justify-items: center;
   align-items: center;
+  max-width: 1000px;
+  margin: auto;
 }
 
 .sideSection {
