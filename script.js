@@ -155,7 +155,7 @@ const game = (function () {
   };
 
   const handleGameEnd = () => {
-    console.log("game ends")
+    console.log("game ends");
     let winner;
 
     if (playerOne.checkScore() > playerTwo.checkScore()) {
@@ -209,7 +209,7 @@ const game = (function () {
   const verifyGameEnd = () => {
     console.log("roundcounter: " + roundCounter + " " + isNaN(roundCounter));
     console.log("roundsTotal: " + roundsTotal + " " + isNaN(roundsTotal));
-    console.log(roundCounter === roundsTotal)
+    console.log(roundCounter === roundsTotal);
     if (roundCounter === roundsTotal) return true;
   };
 
@@ -247,7 +247,8 @@ const game = (function () {
   const checkPlayerTwo = () => playerTwo;
   const checkRoundCounter = () => roundCounter;
   const checkRoundsTotal = () => roundsTotal;
-  const changeTotalRounds = (newTotalRounds) => (roundsTotal = parseInt(newTotalRounds));
+  const changeTotalRounds = (newTotalRounds) =>
+    (roundsTotal = parseInt(newTotalRounds));
   const checkTurnPlayerOne = () => turnPlayerOne;
 
   return {
@@ -258,8 +259,9 @@ const game = (function () {
     checkRoundsTotal,
     checkTurnPlayerOne,
     changeTotalRounds,
-    newGame,
     handlePlayerMove,
+    newGame,
+    resetGame,
   };
 })();
 
@@ -424,6 +426,8 @@ const screenController = (function () {
   });
 
   const adjustConfigLabel = () => {
+    // default input-method is text.
+    dialogInput.setAttribute("type", "text");
     if (configItem === player1Name) {
       dialogLabel.textContent = "Choose name for Player One:";
       dialogInput.setAttribute("maxlength", 10);
@@ -439,6 +443,8 @@ const screenController = (function () {
     } else if (configItem === totalRounds) {
       dialogLabel.textContent = "Set total amount of rounds:";
       dialogInput.setAttribute("type", "number");
+      messageToPlayer("Ready to start a game?");
+      game.resetGame();
     }
   };
 
