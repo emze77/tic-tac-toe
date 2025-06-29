@@ -452,7 +452,7 @@ const screenController = (function () {
     // form should not submit
     event.preventDefault();
     // returns input when closing
-    configureDialog.close(dialogInput.value); // Have to send the select box value here.
+    configureDialog.close(dialogInput.value);
     handleConfigChange();
     updateScreen();
   });
