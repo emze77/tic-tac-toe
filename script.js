@@ -5,17 +5,17 @@
 */
 
 const gameboard = (function () {
-  // first row = 1 2 3, second row = 4 5 6, third row = 7 8 9
-  let board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // first row = 0, 1, 2. second row = 3, 4, 5. third row = 6, 7, 8.
+  let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
   const placePlayerOne = (field) =>
-    board.splice(field - 1, 1, game.checkPlayerOne().checkSymbol());
+    board.splice(field, 1, game.checkPlayerOne().checkSymbol());
 
   const placePlayerTwo = (field) =>
-    board.splice(field - 1, 1, game.checkPlayerTwo().checkSymbol());
+    board.splice(field, 1, game.checkPlayerTwo().checkSymbol());
 
   // clearing Board = rewrite fields with numbers
-  const clearBoard = () => (board = [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const clearBoard = () => (board = [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 
   const checkBoard = () => board;
 
@@ -92,7 +92,7 @@ const game = (function () {
     legitTurn = false;
     currentPlayer = turnPlayerOne ? playerOne : playerTwo;
 
-    if (verifyTurn(field - 1)) {
+    if (verifyTurn(field)) {
       placeMark(field);
       turnCounter++;
       legitTurn = true;
@@ -342,11 +342,11 @@ const screenController = (function () {
 
   // placing and removing marks
   const placePlayerOne = (field) => {
-    fields[field - 1].textContent = game.checkPlayerOne().checkSymbol();
+    fields[field].textContent = game.checkPlayerOne().checkSymbol();
   };
 
   const placePlayerTwo = (field) => {
-    fields[field - 1].textContent = game.checkPlayerTwo().checkSymbol();
+    fields[field].textContent = game.checkPlayerTwo().checkSymbol();
   };
 
   const resetFields = () => {
