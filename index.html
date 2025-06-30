@@ -32,6 +32,7 @@
 
       <section class="section2">
         <div class="gameboard">
+          <button class="field" value="0" id="btn9"></button>
           <button class="field" value="1" id="btn1"></button>
           <button class="field" value="2" id="btn2"></button>
           <button class="field" value="3" id="btn3"></button>
@@ -40,7 +41,6 @@
           <button class="field" value="6" id="btn6"></button>
           <button class="field" value="7" id="btn7"></button>
           <button class="field" value="8" id="btn8"></button>
-          <button class="field" value="9" id="btn9"></button>
         </div>
       </section>
 
@@ -81,11 +81,15 @@
       <form>
         <div>
           <label for="dialogInput" id="dialogLabel"> Configure.... </label>
-          <input type="text" id="dialogInput" class="dialogInput" autofocus/>
+          <input type="text" id="dialogInput" class="dialogInput" autofocus />
         </div>
         <div>
-          <button value="cancel" formmethod="dialog" class="modalBtn">Cancel</button>
-          <button id="confirmBtn" value="default" class="modalBtn">Confirm</button>
+          <button value="cancel" formmethod="dialog" class="modalBtn">
+            Cancel
+          </button>
+          <button id="confirmBtn" value="default" class="modalBtn">
+            Confirm
+          </button>
         </div>
       </form>
     </dialog>
