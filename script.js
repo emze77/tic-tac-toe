@@ -199,24 +199,19 @@ const game = (function () {
       [6, 4, 2], // diagonal
     ];
 
-
-
-    let csym = (currentPlayer === playerOne)
+    let currentSymbol = (currentPlayer === playerOne)
       ? playerOne.checkSymbol()
       : playerTwo.checkSymbol();
 
     let gc = gameboard.checkField;
 
     return possibleCombinations.find((el) => {
-      return el.every((e) => gc(e) === csym);
+      return el.every((e) => gc(e) === currentSymbol);
     });
   };
 
   const verifyGameEnd = () => {
-    console.log("roundcounter: " + roundCounter + " " + isNaN(roundCounter));
-    console.log("roundsTotal: " + roundsTotal + " " + isNaN(roundsTotal));
-    console.log(roundCounter === roundsTotal);
-    if (roundCounter === roundsTotal) return true;
+    return (roundCounter === roundsTotal)
   };
 
   const randomStartPlayer = () => {
