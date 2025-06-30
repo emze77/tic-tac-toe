@@ -101,21 +101,7 @@ const game = (function () {
       legitTurn = false;
     }
 
-    let winningCombination = checkForWin();
-
-    if (winningCombination) {
-      screenController.highlightWinningCombination(winningCombination);
-      handleRoundEnd();
-    }
-
-    if (turnCounter === 9) {
-      draw = true;
-      handleRoundEnd();
-    }
-
-    if (checkForWin()) {
-      handleRoundEnd();
-    }
+    verifyRoundEnd();
 
     if (verifyGameEnd()) {
       handleGameEnd();
@@ -138,6 +124,21 @@ const game = (function () {
     } else {
       gameboard.placePlayerTwo(field);
       screenController.placePlayerTwo(field);
+    }
+  };
+
+  const verifyRoundEnd = () => {
+    let winningCombination = checkForWin();
+
+    if (winningCombination) {
+      screenController.highlightWinningCombination(winningCombination);
+      draw = false;
+      handleRoundEnd();
+    }
+
+    if (turnCounter === 9) {
+      draw = true;
+      handleRoundEnd();
     }
   };
 
