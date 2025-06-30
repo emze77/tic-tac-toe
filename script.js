@@ -41,22 +41,14 @@ function createPlayer(name, symbol) {
   let playerSymbol = symbol;
   let score = 0;
 
-  const checkName = () => playerName;
-  const checkSymbol = () => playerSymbol;
-  const checkScore = () => score;
-  const winRound = () => score++;
-  const resetScore = () => (score = 0);
-  const changeName = (newName) => (playerName = newName);
-  const changeSymbol = (newSymbol) => (playerSymbol = newSymbol);
-
   return {
-    checkName,
-    checkSymbol,
-    checkScore,
-    winRound,
-    resetScore,
-    changeName,
-    changeSymbol,
+    checkName: () => playerName,
+    checkSymbol: () => playerSymbol,
+    checkScore: () => score,
+    winRound: () => score++,
+    resetScore: () => (score = 0),
+    changeName: (newName) => (playerName = newName),
+    changeSymbol: (newSymbol) => (playerSymbol = newSymbol),
   };
 }
 
@@ -243,23 +235,15 @@ const game = (function () {
     screenController.updateScreen();
   };
 
-  const checkGameProcess = () => gameProcess;
-  const checkPlayerOne = () => playerOne;
-  const checkPlayerTwo = () => playerTwo;
-  const checkRoundCounter = () => roundCounter;
-  const checkRoundsTotal = () => roundsTotal;
-  const changeTotalRounds = (newTotalRounds) =>
-    (roundsTotal = parseInt(newTotalRounds));
-  const checkCurrentPlayer = () => currentPlayer;
-
   return {
-    checkPlayerOne,
-    checkPlayerTwo,
-    checkGameProcess,
-    checkRoundCounter,
-    checkRoundsTotal,
-    checkCurrentPlayer,
-    changeTotalRounds,
+    checkPlayerOne: () => playerOne,
+    checkPlayerTwo: () => playerTwo,
+    checkGameProcess: () => gameProcess,
+    checkRoundCounter: () => roundCounter,
+    checkRoundsTotal: () => roundsTotal,
+    checkCurrentPlayer: () => currentPlayer,
+    changeTotalRounds: (newTotalRounds) =>
+    (roundsTotal = parseInt(newTotalRounds)),
     handlePlayerMove,
     newGame,
     resetGame,
@@ -273,27 +257,20 @@ const game = (function () {
 */
 
 const screenController = (function () {
-  // Connections of Players
   const player1Name = document.querySelector("#namePlayer1");
   const player1Symbol = document.querySelector("#symbolPlayer1");
   const player1Score = document.querySelector("#scorePlayer1");
   const player1Container = document.querySelector(".containerPlayer1");
-
   const player2Name = document.querySelector("#namePlayer2");
   const player2Symbol = document.querySelector("#symbolPlayer2");
   const player2Score = document.querySelector("#scorePlayer2");
   const player2Container = document.querySelector(".containerPlayer2");
-
-  // Connection of Fields and Data
   const fields = document.querySelectorAll(".field");
-
   const currentRounds = document.querySelector("#currentRound");
   const totalRounds = document.querySelector("#totalRounds");
   const nextTurnText = document.querySelector("#nextTurnText");
   const message = document.querySelector("#messageToPlayer");
   const btnNewGame = document.querySelector("#btnNewGame");
-
-  // Connection to Dialog-Box
   const dialogLabel = document.querySelector("#dialogLabel");
   const dialogInput = document.querySelector("#dialogInput");
   const confirmBtn = document.querySelector("#confirmBtn");
