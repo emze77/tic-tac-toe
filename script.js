@@ -59,10 +59,14 @@ function createPlayer(name, symbol) {
 */
 
 const game = (function () {
-  let roundsTotal = 3;
+  const DEFAULT_ROUNDS = 3;
+  const MAX_TURNS = 9;
+
+  let roundsTotal = DEFAULT_ROUNDS;
   let roundCounter = 0;
   let turnCounter = 0;
   let gameProcess = false;
+  let draw = false;
 
   let playerOne = createPlayer("Alice", "X");
   let playerTwo = createPlayer("Bob", "O");
@@ -79,7 +83,6 @@ const game = (function () {
   // reacts to click on the board while gameProcess = true
   const handlePlayerMove = (field) => {
     let legitTurn = false;
-    let draw = false;
 
     if (verifyTurn(field)) {
       placeMark(field);
@@ -112,7 +115,7 @@ const game = (function () {
     if (currentPlayer === playerOne) {
       gameboard.placePlayerOne(field);
       screenController.placePlayerOne(field);
-    } else  {
+    } else {
       gameboard.placePlayerTwo(field);
       screenController.placePlayerTwo(field);
     }
@@ -127,7 +130,7 @@ const game = (function () {
       return true;
     }
 
-    if (turnCounter === 9) {
+    if (turnCounter === MAX_TURNS) {
       draw = true;
       return true;
     }
@@ -169,9 +172,9 @@ const game = (function () {
 
   const prepareNextTurn = () => {
     if (currentPlayer === playerOne) {
-      currentPlayer = playerTwo
+      currentPlayer = playerTwo;
     } else {
-      currentPlayer = playerOne
+      currentPlayer = playerOne;
     }
     screenController.highlightCurrentPlayer();
     if (turnCounter != 0)
@@ -191,9 +194,10 @@ const game = (function () {
       [6, 4, 2], // diagonal
     ];
 
-    let currentSymbol = (currentPlayer === playerOne)
-      ? playerOne.checkSymbol()
-      : playerTwo.checkSymbol();
+    let currentSymbol =
+      currentPlayer === playerOne
+        ? playerOne.checkSymbol()
+        : playerTwo.checkSymbol();
 
     let gc = gameboard.checkField;
 
@@ -203,7 +207,7 @@ const game = (function () {
   };
 
   const verifyGameEnd = () => {
-    return (roundCounter === roundsTotal)
+    return roundCounter === roundsTotal;
   };
 
   const randomStartPlayer = () => {
@@ -243,7 +247,7 @@ const game = (function () {
     checkRoundsTotal: () => roundsTotal,
     checkCurrentPlayer: () => currentPlayer,
     changeTotalRounds: (newTotalRounds) =>
-    (roundsTotal = parseInt(newTotalRounds)),
+      (roundsTotal = parseInt(newTotalRounds)),
     handlePlayerMove,
     newGame,
     resetGame,
