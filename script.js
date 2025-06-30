@@ -70,13 +70,10 @@ const game = (function () {
   let roundsTotal = 3;
   let roundCounter = 0;
   let turnCounter = 0;
-  let draw = false;
   let gameProcess = false;
 
   let playerOne = createPlayer("Alice", "X");
   let playerTwo = createPlayer("Bob", "O");
-  let turnPlayerOne = true;
-  let legitTurn = false;
   let currentPlayer = null;
 
   const newGame = () => {
@@ -89,8 +86,8 @@ const game = (function () {
 
   // reacts to click on the board while gameProcess = true
   const handlePlayerMove = (field) => {
-    legitTurn = false;
-    currentPlayer = turnPlayerOne ? playerOne : playerTwo;
+    let legitTurn = false;
+    let draw = false;
 
     if (verifyTurn(field)) {
       placeMark(field);
@@ -101,7 +98,9 @@ const game = (function () {
       legitTurn = false;
     }
 
-    verifyRoundEnd();
+    if (verifyRoundEnd()) {
+      handleRoundEnd();
+    }
 
     if (verifyGameEnd()) {
       handleGameEnd();
@@ -118,10 +117,10 @@ const game = (function () {
   };
 
   const placeMark = (field) => {
-    if (turnPlayerOne) {
+    if (currentPlayer === playerOne) {
       gameboard.placePlayerOne(field);
       screenController.placePlayerOne(field);
-    } else {
+    } else  {
       gameboard.placePlayerTwo(field);
       screenController.placePlayerTwo(field);
     }
@@ -133,12 +132,12 @@ const game = (function () {
     if (winningCombination) {
       screenController.highlightWinningCombination(winningCombination);
       draw = false;
-      handleRoundEnd();
+      return true;
     }
 
     if (turnCounter === 9) {
       draw = true;
-      handleRoundEnd();
+      return true;
     }
   };
 
@@ -177,7 +176,11 @@ const game = (function () {
   };
 
   const prepareNextTurn = () => {
-    turnPlayerOne = !turnPlayerOne;
+    if (currentPlayer === playerOne) {
+      currentPlayer = playerTwo
+    } else {
+      currentPlayer = playerOne
+    }
     screenController.highlightCurrentPlayer();
     if (turnCounter != 0)
       screenController.messageToPlayer(`Turn: ${turnCounter}`);
@@ -196,7 +199,9 @@ const game = (function () {
       [6, 4, 2], // diagonal
     ];
 
-    let csym = turnPlayerOne
+
+
+    let csym = (currentPlayer === playerOne)
       ? playerOne.checkSymbol()
       : playerTwo.checkSymbol();
 
@@ -216,10 +221,10 @@ const game = (function () {
 
   const randomStartPlayer = () => {
     if (Math.random() < 0.5) {
-      turnPlayerOne = true;
+      currentPlayer = playerOne;
       screenController.messageToPlayer(`${playerOne.checkName()} begins!`);
     } else {
-      turnPlayerOne = false;
+      currentPlayer = playerTwo;
       screenController.messageToPlayer(`${playerTwo.checkName()} begins!`);
     }
   };
@@ -250,7 +255,7 @@ const game = (function () {
   const checkRoundsTotal = () => roundsTotal;
   const changeTotalRounds = (newTotalRounds) =>
     (roundsTotal = parseInt(newTotalRounds));
-  const checkTurnPlayerOne = () => turnPlayerOne;
+  const checkCurrentPlayer = () => currentPlayer;
 
   return {
     checkPlayerOne,
@@ -258,7 +263,7 @@ const game = (function () {
     checkGameProcess,
     checkRoundCounter,
     checkRoundsTotal,
-    checkTurnPlayerOne,
+    checkCurrentPlayer,
     changeTotalRounds,
     handlePlayerMove,
     newGame,
@@ -313,7 +318,7 @@ const screenController = (function () {
     currentRounds.textContent = game.checkRoundCounter();
     totalRounds.textContent = game.checkRoundsTotal();
 
-    if (game.checkTurnPlayerOne()) {
+    if (game.checkCurrentPlayer() === game.checkPlayerOne()) {
       nextTurnText.textContent = checkP1.checkName();
     } else {
       nextTurnText.textContent = checkP2.checkName();
@@ -383,7 +388,7 @@ const screenController = (function () {
 
   const highlightCurrentPlayer = () => {
     resetPlayerHighlights();
-    if (game.checkTurnPlayerOne()) {
+    if (game.checkCurrentPlayer() === game.checkPlayerOne()) {
       player1Container.classList.add("highlightTurnP1");
     } else {
       player2Container.classList.add("highlightTurnP2");
