@@ -8,13 +8,9 @@ const gameboard = (function () {
   // first row = 0, 1, 2. second row = 3, 4, 5. third row = 6, 7, 8.
   let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-  const placePlayerOne = (field) =>
-    board.splice(field, 1, game.checkPlayerOne().checkSymbol());
+  const placeMark = (field) =>
+    board.splice(field, 1, game.checkCurrentPlayer().checkSymbol());
 
-  const placePlayerTwo = (field) =>
-    board.splice(field, 1, game.checkPlayerTwo().checkSymbol());
-
-  // clearing Board = rewrite fields with numbers
   const clearBoard = () => (board = [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 
   const checkBoard = () => board;
@@ -24,8 +20,7 @@ const gameboard = (function () {
   return {
     checkField,
     checkBoard,
-    placePlayerOne,
-    placePlayerTwo,
+    placeMark,
     clearBoard,
   };
 })();
@@ -85,12 +80,13 @@ const game = (function () {
     let legitTurn = false;
 
     if (verifyTurn(field)) {
-      placeMark(field);
-      turnCounter++;
       legitTurn = true;
+      gameboard.placeMark(field);
+      screenController.placeMark(field);
+      turnCounter++;
     } else {
-      screenController.messageToPlayer("Field is already occupied!");
       legitTurn = false;
+      screenController.messageToPlayer("Field is already occupied!");
     }
 
     if (verifyRoundEnd()) {
@@ -109,16 +105,6 @@ const game = (function () {
       gameboard.checkField(fieldIndex) !== playerOne.checkSymbol() &&
       gameboard.checkField(fieldIndex) !== playerTwo.checkSymbol()
     );
-  };
-
-  const placeMark = (field) => {
-    if (currentPlayer === playerOne) {
-      gameboard.placePlayerOne(field);
-      screenController.placePlayerOne(field);
-    } else {
-      gameboard.placePlayerTwo(field);
-      screenController.placePlayerTwo(field);
-    }
   };
 
   const verifyRoundEnd = () => {
@@ -301,7 +287,6 @@ const screenController = (function () {
     }
   };
 
-  // different messages for the players
   const messageToPlayer = (text) => {
     message.textContent = text;
   };
@@ -321,14 +306,8 @@ const screenController = (function () {
     });
   });
 
-  // placing and removing marks
-  const placePlayerOne = (field) => {
-    fields[field].textContent = game.checkPlayerOne().checkSymbol();
-  };
-
-  const placePlayerTwo = (field) => {
-    fields[field].textContent = game.checkPlayerTwo().checkSymbol();
-  };
+  const placeMark = (field) =>
+    (fields[field].textContent = game.checkCurrentPlayer().checkSymbol());
 
   const resetFields = () => {
     fields.forEach((item) => {
@@ -442,7 +421,6 @@ const screenController = (function () {
   dialogInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      //simulate clicking confirm
       confirmBtn.click();
     }
   });
@@ -464,8 +442,7 @@ const screenController = (function () {
   return {
     updateScreen,
     messageToPlayer,
-    placePlayerOne,
-    placePlayerTwo,
+    placeMark,
     resetFields,
     highlightWinningCombination,
     removeHighlights,
