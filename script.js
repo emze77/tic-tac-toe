@@ -62,6 +62,7 @@ const game = (function () {
   let turnCounter = 0;
   let gameProcess = false;
   let draw = false;
+  let legitTurn = false;
 
   let playerOne = createPlayer("Alice", "X");
   let playerTwo = createPlayer("Bob", "O");
@@ -77,16 +78,10 @@ const game = (function () {
 
   // reacts to click on the board while gameProcess = true
   const handlePlayerMove = (field) => {
-    let legitTurn = false;
-
     if (verifyTurn(field)) {
-      legitTurn = true;
-      gameboard.placeMark(field);
-      screenController.placeMark(field);
-      turnCounter++;
+      handleLegitTurn(field);
     } else {
-      legitTurn = false;
-      screenController.messageToPlayer("Field is already occupied!");
+      handleIllegitTurn();
     }
 
     if (verifyRoundEnd()) {
@@ -105,6 +100,18 @@ const game = (function () {
       gameboard.checkField(fieldIndex) !== playerOne.checkSymbol() &&
       gameboard.checkField(fieldIndex) !== playerTwo.checkSymbol()
     );
+  };
+
+  const handleLegitTurn = (field) => {
+    legitTurn = true;
+    gameboard.placeMark(field);
+    screenController.placeMark(field);
+    turnCounter++;
+  };
+
+  const handleIllegitTurn = () => {
+    legitTurn = false;
+    screenController.messageToPlayer("Field is already occupied!");
   };
 
   const verifyRoundEnd = () => {
