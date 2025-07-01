@@ -254,35 +254,46 @@ const game = (function () {
 */
 
 const screenController = (function () {
-  const player1Name = document.querySelector("#namePlayer1");
-  const player1Symbol = document.querySelector("#symbolPlayer1");
-  const player1Score = document.querySelector("#scorePlayer1");
-  const player1Container = document.querySelector(".containerPlayer1");
-  const player2Name = document.querySelector("#namePlayer2");
-  const player2Symbol = document.querySelector("#symbolPlayer2");
-  const player2Score = document.querySelector("#scorePlayer2");
-  const player2Container = document.querySelector(".containerPlayer2");
+
+  const playerOne = {
+    name: document.querySelector("#namePlayer1"),
+    symbol: document.querySelector("#symbolPlayer1"),
+    score: document.querySelector("#scorePlayer1"),
+    container: document.querySelector(".containerPlayer1"),
+  }
+
+  const playerTwo = {
+    name: document.querySelector("#namePlayer2"),
+    symbol: document.querySelector("#symbolPlayer2"),
+    score: document.querySelector("#scorePlayer2"),
+    container: document.querySelector(".containerPlayer2"),
+  }
+
+  const dialog = {
+    label: document.querySelector("#dialogLabel"),
+    input: document.querySelector("#dialogInput"),
+    confirmBtn: document.querySelector("#confirmBtn"),
+  }
+
   const fields = document.querySelectorAll(".field");
   const currentRounds = document.querySelector("#currentRound");
   const totalRounds = document.querySelector("#totalRounds");
   const nextTurnText = document.querySelector("#nextTurnText");
   const message = document.querySelector("#messageToPlayer");
   const btnNewGame = document.querySelector("#btnNewGame");
-  const dialogLabel = document.querySelector("#dialogLabel");
-  const dialogInput = document.querySelector("#dialogInput");
-  const confirmBtn = document.querySelector("#confirmBtn");
+
 
   // abbreviations
   const checkP1 = game.checkPlayerOne();
   const checkP2 = game.checkPlayerTwo();
 
   const updateScreen = () => {
-    player1Name.textContent = checkP1.checkName();
-    player2Name.textContent = checkP2.checkName();
-    player1Symbol.textContent = checkP1.checkSymbol();
-    player2Symbol.textContent = checkP2.checkSymbol();
-    player1Score.textContent = checkP1.checkScore();
-    player2Score.textContent = checkP2.checkScore();
+    playerOne.name.textContent = checkP1.checkName();
+    playerTwo.name.textContent = checkP2.checkName();
+    playerOne.symbol.textContent = checkP1.checkSymbol();
+    playerTwo.symbol.textContent = checkP2.checkSymbol();
+    playerOne.score.textContent = checkP1.checkScore();
+    playerTwo.score.textContent = checkP2.checkScore();
 
     currentRounds.textContent = game.checkRoundCounter();
     totalRounds.textContent = game.checkRoundsTotal();
@@ -351,25 +362,25 @@ const screenController = (function () {
   const highlightCurrentPlayer = () => {
     resetPlayerHighlights();
     if (game.checkCurrentPlayer() === game.checkPlayerOne()) {
-      player1Container.classList.add("highlightTurnP1");
+      playerOne.container.classList.add("highlightTurnP1");
     } else {
-      player2Container.classList.add("highlightTurnP2");
+      playerTwo.container.classList.add("highlightTurnP2");
     }
   };
 
   const highlightWinner = (player) => {
     if (player === "playerOne") {
-      player1Container.classList.add("highlightWinner");
+      playerOne.container.classList.add("highlightWinner");
     } else {
-      player2Container.classList.add("highlightWinner");
+      playerTwo.container.classList.add("highlightWinner");
     }
   };
 
   const resetPlayerHighlights = () => {
-    player1Container.classList.remove("highlightTurnP1");
-    player2Container.classList.remove("highlightTurnP2");
-    player1Container.classList.remove("highlightWinner");
-    player2Container.classList.remove("highlightWinner");
+    playerOne.container.classList.remove("highlightTurnP1");
+    playerTwo.container.classList.remove("highlightTurnP2");
+    playerOne.container.classList.remove("highlightWinner");
+    playerTwo.container.classList.remove("highlightWinner");
   };
 
   // configure names, symbols and amount of rounds to play
@@ -377,17 +388,17 @@ const screenController = (function () {
   let configItem;
 
   let configurableItems = [
-    player1Name,
-    player1Symbol,
-    player2Name,
-    player2Symbol,
+    playerOne.name,
+    playerOne.symbol,
+    playerTwo.name,
+    playerTwo.symbol,
     totalRounds,
   ];
 
   configurableItems.forEach((item) => {
     item.addEventListener("click", () => {
       configItem = item;
-      dialogInput.value = "";
+      dialog.input.value = "";
       adjustConfigLabel();
       configureDialog.showModal();
     });
@@ -395,22 +406,22 @@ const screenController = (function () {
 
   const adjustConfigLabel = () => {
     // default input-method is text.
-    dialogInput.setAttribute("type", "text");
-    if (configItem === player1Name) {
-      dialogLabel.textContent = "Choose name for Player One:";
-      dialogInput.setAttribute("maxlength", 10);
-    } else if (configItem === player1Symbol) {
-      dialogInput.setAttribute("maxlength", 1);
-      dialogLabel.textContent = "Choose symbol for Player One:";
-    } else if (configItem === player2Name) {
-      dialogInput.setAttribute("maxlength", 10);
-      dialogLabel.textContent = "Choose name for Player Two:";
-    } else if (configItem === player2Symbol) {
-      dialogInput.setAttribute("maxlength", 1);
-      dialogLabel.textContent = "Choose symbol for Player Two:";
+    dialog.input.setAttribute("type", "text");
+    if (configItem === playerOne.name) {
+      dialog.label.textContent = "Choose name for Player One:";
+      dialog.input.setAttribute("maxlength", 10);
+    } else if (configItem === playerOne.symbol) {
+      dialog.input.setAttribute("maxlength", 1);
+      dialog.label.textContent = "Choose symbol for Player One:";
+    } else if (configItem === playerTwo.name) {
+      dialog.input.setAttribute("maxlength", 10);
+      dialog.label.textContent = "Choose name for Player Two:";
+    } else if (configItem === playerTwo.symbol) {
+      dialog.input.setAttribute("maxlength", 1);
+      dialog.label.textContent = "Choose symbol for Player Two:";
     } else if (configItem === totalRounds) {
-      dialogLabel.textContent = "Set total amount of rounds:";
-      dialogInput.setAttribute("type", "number");
+      dialog.label.textContent = "Set total amount of rounds:";
+      dialog.input.setAttribute("type", "number");
       messageToPlayer("Ready to start a game?");
       game.resetGame();
     }
@@ -420,26 +431,26 @@ const screenController = (function () {
     // form should not submit
     event.preventDefault();
     // returns input when closing
-    configureDialog.close(dialogInput.value);
+    configureDialog.close(dialog.input.value);
     handleConfigChange();
     updateScreen();
   });
 
-  dialogInput.addEventListener("keydown", (event) => {
+  dialog.input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      confirmBtn.click();
+      dialog.confirmBtn.click();
     }
   });
 
   const handleConfigChange = () => {
-    if (configItem === player1Name) {
+    if (configItem === playerOne.name) {
       checkP1.changeName(configureDialog.returnValue);
-    } else if (configItem === player1Symbol) {
+    } else if (configItem === playerOne.symbol) {
       checkP1.changeSymbol(configureDialog.returnValue);
-    } else if (configItem === player2Name) {
+    } else if (configItem === playerTwo.name) {
       checkP2.changeName(configureDialog.returnValue);
-    } else if (configItem === player2Symbol) {
+    } else if (configItem === playerTwo.symbol) {
       checkP2.changeSymbol(configureDialog.returnValue);
     } else if (configItem === totalRounds) {
       game.changeTotalRounds(configureDialog.returnValue);
