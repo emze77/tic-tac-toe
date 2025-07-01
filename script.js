@@ -13,13 +13,9 @@ const gameboard = (function () {
 
   const clearBoard = () => (board = [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 
-  const checkBoard = () => board;
-
-  const checkField = (field) => board[field];
-
   return {
-    checkField,
-    checkBoard,
+    checkField: (field) => board[field],
+    checkBoard: () => board,
     placeMark,
     clearBoard,
   };
@@ -187,15 +183,8 @@ const game = (function () {
       [6, 4, 2], // diagonal
     ];
 
-    let currentSymbol =
-      currentPlayer === playerOne
-        ? playerOne.checkSymbol()
-        : playerTwo.checkSymbol();
-
-    let gc = gameboard.checkField;
-
     return possibleCombinations.find((el) => {
-      return el.every((e) => gc(e) === currentSymbol);
+      return el.every((e) => gameboard.checkField(e) === currentPlayer.checkSymbol());
     });
   };
 
@@ -254,26 +243,25 @@ const game = (function () {
 */
 
 const screenController = (function () {
-
   const playerOne = {
     name: document.querySelector("#namePlayer1"),
     symbol: document.querySelector("#symbolPlayer1"),
     score: document.querySelector("#scorePlayer1"),
     container: document.querySelector(".containerPlayer1"),
-  }
+  };
 
   const playerTwo = {
     name: document.querySelector("#namePlayer2"),
     symbol: document.querySelector("#symbolPlayer2"),
     score: document.querySelector("#scorePlayer2"),
     container: document.querySelector(".containerPlayer2"),
-  }
+  };
 
   const dialog = {
     label: document.querySelector("#dialogLabel"),
     input: document.querySelector("#dialogInput"),
     confirmBtn: document.querySelector("#confirmBtn"),
-  }
+  };
 
   const fields = document.querySelectorAll(".field");
   const currentRounds = document.querySelector("#currentRound");
@@ -281,7 +269,6 @@ const screenController = (function () {
   const nextTurnText = document.querySelector("#nextTurnText");
   const message = document.querySelector("#messageToPlayer");
   const btnNewGame = document.querySelector("#btnNewGame");
-
 
   // abbreviations
   const checkP1 = game.checkPlayerOne();
@@ -309,7 +296,6 @@ const screenController = (function () {
     message.textContent = text;
   };
 
-  // Button to start the game
   btnNewGame.addEventListener("click", () => {
     console.log("New Game started");
     game.newGame();
@@ -333,7 +319,6 @@ const screenController = (function () {
     });
   };
 
-  // adding and removing different highlights
   const highlightWinningCombination = (combination) => {
     // remove highlights first to stop dissolve-animation in very quick games
     removeHighlights(combination);
